@@ -7,7 +7,6 @@ import lombok.Getter;
 
 import java.util.Objects;
 
-@Builder
 @Getter
 public class BoardItem {
 
@@ -24,13 +23,14 @@ public class BoardItem {
 
     private final MemberId modified;
 
-    protected BoardItem(String id, String title, String body, MemberId created, MemberId modified) {
+    @Builder
+    protected BoardItem(String id, String title, String body, String created, String modified) {
         this.id = id;
         validate(title, body);
         this.title = title;
         this.body = body;
-        this.created = created;
-        this.modified = modified;
+        this.created = MemberId.of(created);
+        this.modified = MemberId.of(modified);
     }
 
     private void validate(String title, String body) {
@@ -55,8 +55,7 @@ public class BoardItem {
     }
 
     public static BoardItem writeOf(String title, String body, String writer) {
-        MemberId memberId = MemberId.of(writer);
-        return new BoardItem(GUIDGenerator.newId(), title, body, memberId, memberId);
+        return new BoardItem(GUIDGenerator.newId(), title, body, writer, writer);
     }
 
     @Override

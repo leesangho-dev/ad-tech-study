@@ -6,6 +6,8 @@ import leesangho.adtechstudy.mvcapplication.infra.entity.BoardItemEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Repository
 public class BoardItemRepositoryImpl implements BoardItemRepository {
 
@@ -15,8 +17,8 @@ public class BoardItemRepositoryImpl implements BoardItemRepository {
         this.boardItemJpaRepository = boardItemJpaRepository;
     }
 
-    @Override
     @Transactional
+    @Override
     public String saveItem(BoardItem boardItem) {
         BoardItemEntity boardItemEntity = BoardItemEntity.builder()
                 .id(boardItem.getId())
@@ -28,4 +30,22 @@ public class BoardItemRepositoryImpl implements BoardItemRepository {
         boardItemJpaRepository.save(boardItemEntity);
         return boardItem.getId();
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Optional<BoardItem> findById(String boardItemId) {
+        return boardItemJpaRepository.findById(boardItemId)
+                .map(this::fromDomain);
+    }
+
+    private BoardItem fromDomain(BoardItemEntity boardItemEntity) {
+        return BoardItem.builder()
+                .id(boardItemEntity.getId())
+                .title(boardItemEntity.getTitle())
+                .body(boardItemEntity.getBody())
+                .created(boardItemEntity.getId())
+                .modified(boardItemEntity.getId())
+                .build();
+    }
+
 }

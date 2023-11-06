@@ -33,4 +33,22 @@ public class BoardDto {
         private String id;
     }
 
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema(description = "게시글 조회 응답")
+    public static class FindItemResponse {
+
+        private String id;
+
+        @Schema(description = "제목", maxLength = 100)
+        private String title;
+
+        @Schema(description = "본문", maxLength = 4000)
+        private String body;
+
+        private String created;
+
+        private String modified;
+    }
 }

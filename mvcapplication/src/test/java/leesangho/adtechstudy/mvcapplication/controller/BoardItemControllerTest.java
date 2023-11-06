@@ -3,6 +3,7 @@ package leesangho.adtechstudy.mvcapplication.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import leesangho.adtechstudy.domain.id.GUIDGenerator;
 import leesangho.adtechstudy.mvcapplication.dto.BoardDto;
+import leesangho.adtechstudy.mvcapplication.usecase.FindBoardItemUseCase;
 import leesangho.adtechstudy.mvcapplication.usecase.SaveBoardItemUseCase;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,10 +19,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.nio.charset.StandardCharsets;
+import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -36,9 +39,12 @@ class BoardItemControllerTest {
     @Mock
     SaveBoardItemUseCase saveBoardItemUseCase;
 
+    @Mock
+    FindBoardItemUseCase findBoardItemUseCase;
+
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new BoardController(saveBoardItemUseCase))
+        mockMvc = MockMvcBuilders.standaloneSetup(new BoardController(saveBoardItemUseCase, findBoardItemUseCase))
                 .setControllerAdvice(new DefaultControllerAdvice())
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .build();
@@ -51,7 +57,7 @@ class BoardItemControllerTest {
     @Nested
     class SaveBoardItem {
 
-        String boardId = GUIDGenerator.newId();
+        String boardItemId = GUIDGenerator.newId();
 
         @DisplayName("성공 케이스")
         @Test
@@ -60,7 +66,7 @@ class BoardItemControllerTest {
             SaveBoardSampleRequest saveBoardSampleRequest = new SaveBoardSampleRequest("제목", "본문", "작성자");
             String body = objectMapper.writeValueAsString(saveBoardSampleRequest);
             given(saveBoardItemUseCase.execute(any()))
-                    .willReturn(new BoardDto.SaveItemResponse(boardId));
+                    .willReturn(new BoardDto.SaveItemResponse(boardItemId));
 
             // When & Then
             mockMvc.perform(post("/v1/board/item")
@@ -74,7 +80,7 @@ class BoardItemControllerTest {
                     .andExpect(jsonPath("$.code").value(HttpStatus.CREATED.value()))
                     .andExpect(jsonPath("$.message").value("게시글 생성이 완료 되었습니다."))
                     .andExpect(jsonPath("$.data").isNotEmpty())
-                    .andExpect(jsonPath("$.data.id").value(boardId))
+                    .andExpect(jsonPath("$.data.id").value(boardItemId))
             ;
         }
 
@@ -136,4 +142,61 @@ class BoardItemControllerTest {
         }
     }
 
+    @DisplayName("게시글 조회 테스트")
+    @Nested
+    class FindBoardItem {
+
+        String boardItemId = GUIDGenerator.newId();
+
+        @DisplayName("성공 케이스")
+        @Test
+        void findBoardItem_happy_case() throws Exception {
+            // Given
+            given(findBoardItemUseCase.execute(boardItemId))
+                    .willReturn(new BoardDto.FindItemResponse());
+
+            // When & Then
+            mockMvc.perform(get("/v1/board/item/{id}", boardItemId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .characterEncoding(StandardCharsets.UTF_8)
+                    )
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.code").value(HttpStatus.OK.value()))
+                    .andExpect(jsonPath("$.data").isNotEmpty())
+            ;
+        }
+
+        @DisplayName("실패 케이스 - 게시글 아이디 입력 안함")
+        @Test
+        void findBoardItem_bad_case_bad_request() throws Exception {
+            // Given
+
+            // When & Then
+            mockMvc.perform(get("/v1/board/item/{id}", "")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .characterEncoding(StandardCharsets.UTF_8)
+                    )
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+            ;
+        }
+
+        @DisplayName("실패 케이스 - 게시글 존재 하지 않음")
+        @Test
+        void findBoardItem_bad_case_not_found() throws Exception {
+            // Given
+            given(findBoardItemUseCase.execute(boardItemId))
+                    .willThrow(new NoSuchElementException("게시글을 찾을 수 없습니다."));
+
+            // When & then
+            mockMvc.perform(get("/v1/board/item/{id}", boardItemId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .characterEncoding(StandardCharsets.UTF_8)
+                    )
+                    .andDo(print())
+                    .andExpect(status().isNotFound())
+            ;
+        }
+    }
 }
