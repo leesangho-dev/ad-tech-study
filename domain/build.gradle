@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+}
+
+group = 'leesangho.adtechstudy'
+version = '0.0.1-SNAPSHOT'
+
+bootJar.enabled = false
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+}
+
+test {
+    useJUnitPlatform()
+}

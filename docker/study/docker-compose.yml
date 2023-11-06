@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  maria-db:
+    image: mariadb:11
+    ports:
+      - "3306:3306"
+    volumes:
+      - maria-db-volume:/var/lib/mysql:Z
+    environment:
+      - MARIADB_ROOT_PASSWORD=1234
+
+volumes:
+  maria-db-volume:
