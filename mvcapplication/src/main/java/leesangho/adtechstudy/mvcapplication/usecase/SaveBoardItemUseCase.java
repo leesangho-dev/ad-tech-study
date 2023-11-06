@@ -17,6 +17,6 @@ public class SaveBoardItemUseCase {
     public BoardDto.SaveItemResponse execute(BoardDto.SaveItemRequest saveItemRequest) {
         BoardItem boardItem = BoardItem.writeOf(saveItemRequest.getTitle(), saveItemRequest.getBody(), saveItemRequest.getWriter());
         String boardItemId = boardItemCommandService.saveItem(boardItem);
-        return new BoardDto.SaveItemResponse(boardItemId);
+        return BoardDto.SaveItemResponse.of(boardItemId);
     }
 }

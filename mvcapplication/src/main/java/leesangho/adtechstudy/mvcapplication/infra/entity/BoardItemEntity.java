@@ -13,12 +13,16 @@ public class BoardItemEntity {
     @Id
     private String id;
 
+    @Column(length = 100)
     private String title;
 
+    @Column(length = 4000)
     private String body;
 
+    @Column(length = 100)
     private String created;
 
+    @Column(length = 100)
     private String modified;
 
     protected BoardItemEntity() {

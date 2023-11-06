@@ -29,6 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@DisplayName("게시글 Presentation 테스트")
 @MockitoSettings(strictness = Strictness.LENIENT)
 class BoardItemControllerTest {
 
@@ -66,7 +67,7 @@ class BoardItemControllerTest {
             SaveBoardSampleRequest saveBoardSampleRequest = new SaveBoardSampleRequest("제목", "본문", "작성자");
             String body = objectMapper.writeValueAsString(saveBoardSampleRequest);
             given(saveBoardItemUseCase.execute(any()))
-                    .willReturn(new BoardDto.SaveItemResponse(boardItemId));
+                    .willReturn(BoardDto.SaveItemResponse.of(boardItemId));
 
             // When & Then
             mockMvc.perform(post("/v1/board/item")
@@ -153,7 +154,7 @@ class BoardItemControllerTest {
         void findBoardItem_happy_case() throws Exception {
             // Given
             given(findBoardItemUseCase.execute(boardItemId))
-                    .willReturn(new BoardDto.FindItemResponse());
+                    .willReturn(BoardDto.FindItemResponse.of(boardItemId, "제목", "본문", "작성자" ,"작성자"));
 
             // When & Then
             mockMvc.perform(get("/v1/board/item/{id}", boardItemId)

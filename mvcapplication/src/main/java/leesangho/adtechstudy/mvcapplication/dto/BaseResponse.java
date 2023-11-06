@@ -35,4 +35,8 @@ public class BaseResponse<T> {
     public static <T> BaseResponse<T> serverErrorOf(String message) {
         return of(HttpStatus.INTERNAL_SERVER_ERROR, message, null);
     }
+
+    public static BaseResponse<Void> empty(String message) {
+        return of(HttpStatus.NO_CONTENT, message, null);
+    }
 }

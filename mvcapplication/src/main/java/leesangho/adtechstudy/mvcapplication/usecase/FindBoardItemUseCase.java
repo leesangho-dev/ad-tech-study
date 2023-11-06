@@ -16,7 +16,7 @@ public class FindBoardItemUseCase {
 
     public BoardDto.FindItemResponse execute(String boardItemId) {
         BoardItem boardItem = boardItemQueryService.findById(boardItemId);
-        return new BoardDto.FindItemResponse(
+        return BoardDto.FindItemResponse.of(
                 boardItem.getId(),
                 boardItem.getTitle(),
                 boardItem.getBody(),

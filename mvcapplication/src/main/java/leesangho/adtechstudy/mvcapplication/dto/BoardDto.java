@@ -25,7 +25,7 @@ public class BoardDto {
 
     @Data
     @NoArgsConstructor
-    @AllArgsConstructor
+    @AllArgsConstructor(staticName = "of")
     @Schema(description = "게시글 등록 응답")
     public static class SaveItemResponse {
 
@@ -35,10 +35,11 @@ public class BoardDto {
 
     @Data
     @NoArgsConstructor
-    @AllArgsConstructor
+    @AllArgsConstructor(staticName = "of")
     @Schema(description = "게시글 조회 응답")
     public static class FindItemResponse {
 
+        @Schema(description = "게시글 아이디", format = "uuid")
         private String id;
 
         @Schema(description = "제목", maxLength = 100)
@@ -47,8 +48,10 @@ public class BoardDto {
         @Schema(description = "본문", maxLength = 4000)
         private String body;
 
+        @Schema(description = "작성자 아이디", maxLength = 100)
         private String created;
 
+        @Schema(description = "수정자 아이디", maxLength = 100)
         private String modified;
     }
 }
