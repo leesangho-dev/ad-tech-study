@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://localhost:3306/study
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: studyuser
+    password: 1234
+  jpa:
+    open-in-view: false
