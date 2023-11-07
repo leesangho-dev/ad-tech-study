@@ -2,7 +2,6 @@ package leesangho.adtechstudy.webflux.infra.document;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class BoardItemDocument {
 
     @Id
-    private ObjectId id;
+    private String id;
 
     private String title;
 
@@ -25,7 +24,7 @@ public class BoardItemDocument {
     }
 
     @Builder
-    protected BoardItemDocument(ObjectId id, String title, String body, String created, String modified) {
+    protected BoardItemDocument(String id, String title, String body, String created, String modified) {
         this.id = id;
         this.title = title;
         this.body = body;
@@ -33,7 +32,4 @@ public class BoardItemDocument {
         this.modified = modified;
     }
 
-    public String idString() {
-        return id.toString();
-    }
 }

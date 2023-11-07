@@ -22,4 +22,8 @@ public class BoardItemReactiveCommandService {
     public Mono<Void> delete(BoardItem boardItem) {
         return boardItemReactiveRepository.delete(boardItem);
     }
+
+    public Mono<String> updateItem(BoardItem boardItem) {
+        return boardItemReactiveRepository.updateItem(boardItem);
+    }
 }

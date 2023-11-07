@@ -53,4 +53,20 @@ public class BoardDto {
         @Schema(description = "수정자 아이디", maxLength = 100)
         private String modified;
     }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema(description = "게시글 수정 요청")
+    public static class UpdateItemRequest {
+
+        @Schema(description = "제목")
+        private String title;
+
+        @Schema(description = "본문")
+        private String body;
+
+        @Schema(description = "수정자")
+        private String writer;
+    }
 }

@@ -10,4 +10,6 @@ public interface BoardItemReactiveRepository {
     Mono<BoardItem> findById(String boardItemId);
 
     Mono<Void> delete(BoardItem boardItem);
+
+    Mono<String> updateItem(BoardItem boardItem);
 }

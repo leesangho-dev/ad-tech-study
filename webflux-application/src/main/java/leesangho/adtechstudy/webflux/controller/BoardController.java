@@ -6,12 +6,14 @@ import leesangho.adtechstudy.webflux.dto.BoardDto;
 import leesangho.adtechstudy.webflux.usecase.DeleteBoardItemUseCase;
 import leesangho.adtechstudy.webflux.usecase.FindBoardItemUseCase;
 import leesangho.adtechstudy.webflux.usecase.SaveBoardItemUseCase;
+import leesangho.adtechstudy.webflux.usecase.UpdateBoardItemUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -28,11 +30,14 @@ public class BoardController {
 
     private final DeleteBoardItemUseCase deleteBoardItemUseCase;
 
+    private final UpdateBoardItemUseCase updateBoardItemUseCase;
+
     public BoardController(SaveBoardItemUseCase saveBoardItemUseCase, FindBoardItemUseCase findBoardItemUseCase,
-                           DeleteBoardItemUseCase deleteBoardItemUseCase) {
+                           DeleteBoardItemUseCase deleteBoardItemUseCase, UpdateBoardItemUseCase updateBoardItemUseCase) {
         this.saveBoardItemUseCase = saveBoardItemUseCase;
         this.findBoardItemUseCase = findBoardItemUseCase;
         this.deleteBoardItemUseCase = deleteBoardItemUseCase;
+        this.updateBoardItemUseCase = updateBoardItemUseCase;
     }
 
     @Operation(tags = "게시판", description = "게시글 등록", summary = "게시글 등록")
@@ -50,11 +55,20 @@ public class BoardController {
                 .map(itemResponse -> BaseResponse.ok("게시글을 조회 하였습니다.", itemResponse));
     }
 
-    @Operation(tags = "게시판", description = "게시글을 삭제", summary = "게시글을 삭제")
+    @Operation(tags = "게시판", description = "게시글 삭제", summary = "게시글 삭제")
     @DeleteMapping(value = "/item/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<BaseResponse<Void>> deleteBoardItem(@PathVariable("id") String boardItemId) {
         return deleteBoardItemUseCase.execute(boardItemId)
                 .then(Mono.fromCallable(() -> BaseResponse.empty("게시글을 삭제 하였습니다.")));
+    }
+
+    @Operation(tags = "게시판", description = "게시글 수정", summary = "게시글 수정")
+    @PutMapping(value = "/item/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<BaseResponse<BoardDto.ItemIdResponse>> updateBoardItem(@PathVariable("id") String boardItemId,
+            @RequestBody BoardDto.UpdateItemRequest updateItemRequest) {
+        return updateBoardItemUseCase.execute(boardItemId, updateItemRequest)
+                .map(itemIdResponse -> BaseResponse.ok("게시글을 수정하였습니다.", itemIdResponse));
+
     }
 }
