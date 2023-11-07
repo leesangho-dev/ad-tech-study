@@ -7,4 +7,5 @@ public interface BoardItemReactiveRepository {
 
     Mono<String> saveItem(BoardItem boardItem);
 
+    Mono<BoardItem> findById(String boardItemId);
 }

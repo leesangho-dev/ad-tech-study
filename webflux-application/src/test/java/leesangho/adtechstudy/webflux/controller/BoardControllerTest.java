@@ -2,10 +2,14 @@ package leesangho.adtechstudy.webflux.controller;
 
 import leesangho.adtechstudy.domain.board.BoardItem;
 import leesangho.adtechstudy.objectmother.BoardItemFixture;
+import leesangho.adtechstudy.webflux.usecase.FindBoardItemUseCase;
+import leesangho.adtechstudy.webflux.usecase.SaveBoardItemUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoSettings;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -13,13 +17,20 @@ import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
 
+@MockitoSettings
 class BoardControllerTest {
 
     WebTestClient webTestClient;
 
+    @Mock
+    SaveBoardItemUseCase saveBoardItemUseCase;
+
+    @Mock
+    FindBoardItemUseCase findBoardItemUseCase;
+
     @BeforeEach
     void setUp() {
-        webTestClient = WebTestClient.bindToController(new BoardController(saveBoardItemUseCase))
+        webTestClient = WebTestClient.bindToController(new BoardController(saveBoardItemUseCase, findBoardItemUseCase))
                 .build();
     }
 

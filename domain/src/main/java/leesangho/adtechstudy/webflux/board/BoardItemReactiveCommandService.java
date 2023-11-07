@@ -6,16 +6,16 @@ import leesangho.adtechstudy.domain.board.BoardItem;
 import reactor.core.publisher.Mono;
 
 @Named
-public class BoardItemReactiveQueryService {
+public class BoardItemReactiveCommandService {
 
     private final BoardItemReactiveRepository boardItemReactiveRepository;
 
     @Inject
-    public BoardItemReactiveQueryService(BoardItemReactiveRepository boardItemReactiveRepository) {
+    public BoardItemReactiveCommandService(BoardItemReactiveRepository boardItemReactiveRepository) {
         this.boardItemReactiveRepository = boardItemReactiveRepository;
     }
 
-    public Mono<BoardItem> findById(String boardItemId) {
-        return boardItemReactiveRepository.findById(boardItemId);
+    public Mono<String> saveItem(BoardItem boardItem) {
+        return boardItemReactiveRepository.saveItem(boardItem);
     }
 }
