@@ -13,6 +13,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'io.projectreactor:reactor-core:3.4.33'
     testFixturesImplementation 'org.jeasy:easy-random-core:5.0.0'
 }
 

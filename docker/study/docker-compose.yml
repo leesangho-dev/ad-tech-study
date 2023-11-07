@@ -10,5 +10,16 @@ services:
     environment:
       - MARIADB_ROOT_PASSWORD=1234
 
+  mongo-db:
+    image: mongo:7.0-rc
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-db-volume:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=1234
+
 volumes:
   maria-db-volume:
+  mongo-db-volume:
