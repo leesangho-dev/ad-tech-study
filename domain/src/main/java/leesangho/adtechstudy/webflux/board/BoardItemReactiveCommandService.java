@@ -18,4 +18,8 @@ public class BoardItemReactiveCommandService {
     public Mono<String> saveItem(BoardItem boardItem) {
         return boardItemReactiveRepository.saveItem(boardItem);
     }
+
+    public Mono<Void> delete(BoardItem boardItem) {
+        return boardItemReactiveRepository.delete(boardItem);
+    }
 }

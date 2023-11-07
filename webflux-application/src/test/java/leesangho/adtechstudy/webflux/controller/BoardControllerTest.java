@@ -2,6 +2,7 @@ package leesangho.adtechstudy.webflux.controller;
 
 import leesangho.adtechstudy.domain.board.BoardItem;
 import leesangho.adtechstudy.objectmother.BoardItemFixture;
+import leesangho.adtechstudy.webflux.usecase.DeleteBoardItemUseCase;
 import leesangho.adtechstudy.webflux.usecase.FindBoardItemUseCase;
 import leesangho.adtechstudy.webflux.usecase.SaveBoardItemUseCase;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,9 +29,13 @@ class BoardControllerTest {
     @Mock
     FindBoardItemUseCase findBoardItemUseCase;
 
+    @Mock
+    DeleteBoardItemUseCase deleteBoardItemUseCase;
+
     @BeforeEach
     void setUp() {
-        webTestClient = WebTestClient.bindToController(new BoardController(saveBoardItemUseCase, findBoardItemUseCase))
+        webTestClient = WebTestClient.bindToController(new BoardController(saveBoardItemUseCase, findBoardItemUseCase,
+                        deleteBoardItemUseCase))
                 .build();
     }
 

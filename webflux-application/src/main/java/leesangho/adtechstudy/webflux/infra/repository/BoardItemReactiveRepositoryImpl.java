@@ -50,4 +50,9 @@ public class BoardItemReactiveRepositoryImpl implements BoardItemReactiveReposit
                 .build();
     }
 
+    @Override
+    public Mono<Void> delete(BoardItem boardItem) {
+        return boardItemReactiveMongoRepository.deleteById(new ObjectId(boardItem.getId()));
+    }
+
 }
