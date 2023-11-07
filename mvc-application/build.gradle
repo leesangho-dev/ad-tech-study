@@ -17,7 +17,7 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.jeasy:easy-random-core:5.0.0'
+    testImplementation testFixtures(project(":domain"))
 }
 
 test {

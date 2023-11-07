@@ -1,10 +1,11 @@
 package leesangho.adtechstudy.mvcapplication.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import leesangho.adtechstudy.domain.board.BoardItem;
 import leesangho.adtechstudy.domain.id.GUIDGenerator;
 import leesangho.adtechstudy.mvcapplication.dto.BoardDto;
-import leesangho.adtechstudy.mvcapplication.objectmother.BoardItemFixture;
 import leesangho.adtechstudy.mvcapplication.usecase.*;
+import leesangho.adtechstudy.objectmother.BoardItemFixture;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -372,7 +373,7 @@ class BoardItemControllerTest {
             // Given
             List<BoardDto.FindItemResponse> itemResponseList = IntStream.rangeClosed(0, 10)
                     .mapToObj(value -> BoardItemFixture.makeBoardItem())
-                    .map(BoardItemFixture::mappedBoardItemResponse)
+                    .map(this::mappedBoardItemResponse)
                     .collect(Collectors.toList());
             given(findAllPageBoardItemUseCase.execute(PageRequest.of(0, 10)))
                     .willReturn(new PageImpl<>(itemResponseList, PageRequest.of(0, 10), 30));
@@ -388,6 +389,13 @@ class BoardItemControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.code").value(HttpStatus.OK.value()))
             ;
+        }
+
+        private BoardDto.FindItemResponse mappedBoardItemResponse(BoardItem boardItem) {
+            return BoardDto.FindItemResponse.of(
+                    boardItem.getId(), boardItem.getTitle(), boardItem.getBody(),
+                    boardItem.getCreated().getId(), boardItem.getModified().getId()
+            );
         }
     }
 }

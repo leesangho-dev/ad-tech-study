@@ -1,5 +1,3 @@
 rootProject.name = 'ad-tech-study'
 include 'domain'
-include 'mvc-application'
-include 'webflux-application'
-
+include 'mvc-application', 'webflux-application'
