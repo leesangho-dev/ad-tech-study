@@ -4,6 +4,8 @@ import java.util.NoSuchElementException;
 import leesangho.adtechstudy.domain.board.BoardItem;
 import leesangho.adtechstudy.webflux.board.BoardItemReactiveRepository;
 import leesangho.adtechstudy.webflux.infra.document.BoardItemDocument;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
@@ -60,6 +62,12 @@ public class BoardItemReactiveRepositoryImpl implements BoardItemReactiveReposit
         BoardItemDocument boardItemDocument = mappedDocument(boardItem);
         return boardItemReactiveMongoRepository.save(boardItemDocument)
                 .map(BoardItemDocument::getId);
+    }
+
+    @Override
+    public Mono<Page<BoardItem>> findAllByOffsetAndLimit(long offset, int pageSize) {
+        return boardItemReactiveMongoRepository.findAll(PageRequest.of((int) offset, pageSize))
+                .;
     }
 
 }

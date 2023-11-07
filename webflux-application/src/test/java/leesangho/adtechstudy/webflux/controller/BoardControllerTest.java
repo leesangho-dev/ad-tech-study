@@ -35,7 +35,7 @@ class BoardControllerTest {
     @BeforeEach
     void setUp() {
         webTestClient = WebTestClient.bindToController(new BoardController(saveBoardItemUseCase, findBoardItemUseCase,
-                        deleteBoardItemUseCase, updateBoardItemUseCase))
+                        deleteBoardItemUseCase, updateBoardItemUseCase, findAllPageBoardItemsUseCase))
                 .build();
     }
 

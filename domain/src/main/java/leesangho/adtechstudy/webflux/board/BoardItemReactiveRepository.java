@@ -12,4 +12,6 @@ public interface BoardItemReactiveRepository {
     Mono<Void> delete(BoardItem boardItem);
 
     Mono<String> updateItem(BoardItem boardItem);
+
+    <T extends Iterable<BoardItem>> Mono<T> findAllByOffsetAndLimit(long offset, int pageSize);
 }

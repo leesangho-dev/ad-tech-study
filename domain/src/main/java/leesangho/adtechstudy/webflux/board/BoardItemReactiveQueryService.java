@@ -18,4 +18,8 @@ public class BoardItemReactiveQueryService {
     public Mono<BoardItem> findById(String boardItemId) {
         return boardItemReactiveRepository.findById(boardItemId);
     }
+
+    public <T extends Iterable<BoardItem>> Mono<T> findAllByOffsetAndLimit(long offset, int pageSize) {
+        return boardItemReactiveRepository.findAllByOffsetAndLimit(offset, pageSize);
+    }
 }

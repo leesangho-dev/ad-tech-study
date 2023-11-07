@@ -4,9 +4,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import leesangho.adtechstudy.webflux.dto.BaseResponse;
 import leesangho.adtechstudy.webflux.dto.BoardDto;
 import leesangho.adtechstudy.webflux.usecase.DeleteBoardItemUseCase;
+import leesangho.adtechstudy.webflux.usecase.FindAllPageBoardItemsUseCase;
 import leesangho.adtechstudy.webflux.usecase.FindBoardItemUseCase;
 import leesangho.adtechstudy.webflux.usecase.SaveBoardItemUseCase;
 import leesangho.adtechstudy.webflux.usecase.UpdateBoardItemUseCase;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,12 +35,16 @@ public class BoardController {
 
     private final UpdateBoardItemUseCase updateBoardItemUseCase;
 
+    private final FindAllPageBoardItemsUseCase findAllPageBoardItemsUseCase;
+
     public BoardController(SaveBoardItemUseCase saveBoardItemUseCase, FindBoardItemUseCase findBoardItemUseCase,
-                           DeleteBoardItemUseCase deleteBoardItemUseCase, UpdateBoardItemUseCase updateBoardItemUseCase) {
+                           DeleteBoardItemUseCase deleteBoardItemUseCase, UpdateBoardItemUseCase updateBoardItemUseCase,
+                           FindAllPageBoardItemsUseCase findAllPageBoardItemsUseCase) {
         this.saveBoardItemUseCase = saveBoardItemUseCase;
         this.findBoardItemUseCase = findBoardItemUseCase;
         this.deleteBoardItemUseCase = deleteBoardItemUseCase;
         this.updateBoardItemUseCase = updateBoardItemUseCase;
+        this.findAllPageBoardItemsUseCase = findAllPageBoardItemsUseCase;
     }
 
     @Operation(tags = "게시판", description = "게시글 등록", summary = "게시글 등록")
@@ -69,6 +76,14 @@ public class BoardController {
             @RequestBody BoardDto.UpdateItemRequest updateItemRequest) {
         return updateBoardItemUseCase.execute(boardItemId, updateItemRequest)
                 .map(itemIdResponse -> BaseResponse.ok("게시글을 수정하였습니다.", itemIdResponse));
+
+    }
+
+    @Operation(tags = "게시판", description = "게시글 목록", summary = "게시글 목록")
+    @GetMapping(value = {"/item", "/item/list"})
+    public Mono<BaseResponse<Page<BoardDto.FindItemResponse>>> findAllPageBoardItems(Pageable pageable) {
+        Mono<Page<BoardDto.FindItemResponse>> pageMono =  findAllPageBoardItemsUseCase.execute(pageable);
+        return pageMono.map(findItemResponses -> BaseResponse.ok("게시글 목록을 조회 하였습니다.", findItemResponses));
 
     }
 }
