@@ -69,8 +69,8 @@ public class BoardItemRepositoryImpl implements BoardItemRepository {
                 .id(boardItemEntity.getId())
                 .title(boardItemEntity.getTitle())
                 .body(boardItemEntity.getBody())
-                .created(boardItemEntity.getId())
-                .modified(boardItemEntity.getId())
+                .created(boardItemEntity.getCreated())
+                .modified(boardItemEntity.getModified())
                 .build();
     }
 

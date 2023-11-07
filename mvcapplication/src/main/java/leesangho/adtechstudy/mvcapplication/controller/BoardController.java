@@ -13,7 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/v1/board", produces = MediaType.APPLICATION_JSON_VALUE)
 public class BoardController {
 
     private final SaveBoardItemUseCase saveBoardItemUseCase;
@@ -35,7 +35,7 @@ public class BoardController {
     }
 
     @Operation(tags = "게시판", description = "게시글 등록", summary = "게시글 등록")
-    @PostMapping(value = "/item")
+    @PostMapping(value = "/item", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public BaseResponse<BoardDto.ItemIdResponse> saveBoardItem(@RequestBody BoardDto.SaveItemRequest saveItemRequest) {
         BoardDto.ItemIdResponse itemIdResponse = saveBoardItemUseCase.execute(saveItemRequest);
@@ -60,7 +60,7 @@ public class BoardController {
     }
 
     @Operation(tags = "게시판", description = "게시글 수정", summary = "게시글 수정")
-    @PutMapping(value = "/item/{id}")
+    @PutMapping(value = "/item/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public BaseResponse<BoardDto.ItemIdResponse> updateBoardItem(
             @Parameter(description = "게시글 아이디") @PathVariable(value = "id") String boardItemId,
             @RequestBody BoardDto.UpdateItemRequest updateItemRequest) {
@@ -70,9 +70,10 @@ public class BoardController {
     }
 
     @Operation(tags = "게시판", description = "게시글 목록 조회", summary = "게시글 목록 조회")
-    @GetMapping(value = "/item")
+    @GetMapping(value = {"/item", "/item/list"})
     @PageableAsQueryParam
-    public BaseResponse<Page<BoardDto.FindItemResponse>> findAllPageBoardItems(Pageable pageable) {
+    public BaseResponse<Page<BoardDto.FindItemResponse>> findAllPageBoardItems(
+            @Parameter(hidden = true) Pageable pageable) {
         Page<BoardDto.FindItemResponse> page = findAllPageBoardItemUseCase.execute(pageable);
         return BaseResponse.ok("게시글 목록을 조회하였습니다.", page);
     }

@@ -17,7 +17,7 @@ public class FindAllPageBoardItemUseCase {
     }
 
     public Page<BoardDto.FindItemResponse> execute(Pageable pageable) {
-        Page<BoardItem> boardItemList = boardItemQueryService.findAllByOffsetAndLimit(pageable.getOffset(), pageable.getPageNumber());
+        Page<BoardItem> boardItemList = boardItemQueryService.findAllByOffsetAndLimit(pageable.getOffset(), pageable.getPageSize());
         return boardItemList.map(this::mappedResponse);
     }
 
