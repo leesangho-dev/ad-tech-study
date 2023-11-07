@@ -11,4 +11,6 @@ public interface BoardItemRepository {
     void delete(BoardItem boardItem);
 
     void updateItem(BoardItem boardItem);
+
+    <T extends Iterable<BoardItem>> T findAllByOffsetAndLimit(long offset, int limit);
 }

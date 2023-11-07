@@ -3,10 +3,8 @@ package leesangho.adtechstudy.mvcapplication.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import leesangho.adtechstudy.domain.id.GUIDGenerator;
 import leesangho.adtechstudy.mvcapplication.dto.BoardDto;
-import leesangho.adtechstudy.mvcapplication.usecase.DeleteBoardItemUseCase;
-import leesangho.adtechstudy.mvcapplication.usecase.FindBoardItemUseCase;
-import leesangho.adtechstudy.mvcapplication.usecase.SaveBoardItemUseCase;
-import leesangho.adtechstudy.mvcapplication.usecase.UpdateBoardItemUseCase;
+import leesangho.adtechstudy.mvcapplication.objectmother.BoardItemFixture;
+import leesangho.adtechstudy.mvcapplication.usecase.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -14,6 +12,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
@@ -21,7 +22,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -52,11 +56,15 @@ class BoardItemControllerTest {
     @Mock
     UpdateBoardItemUseCase updateBoardItemUseCase;
 
+    @Mock
+    FindAllPageBoardItemUseCase findAllPageBoardItemUseCase;
+
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new BoardController(saveBoardItemUseCase, findBoardItemUseCase, deleteBoardItemUseCase, updateBoardItemUseCase))
+        mockMvc = MockMvcBuilders.standaloneSetup(new BoardController(saveBoardItemUseCase, findBoardItemUseCase, deleteBoardItemUseCase, updateBoardItemUseCase, findAllPageBoardItemUseCase))
                 .setControllerAdvice(new DefaultControllerAdvice())
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                 .build();
         objectMapper = Jackson2ObjectMapperBuilder.json()
                 .build();
@@ -350,6 +358,35 @@ class BoardItemControllerTest {
                     .andDo(print())
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
+            ;
+        }
+    }
+
+    @DisplayName("게시글 목록 조회")
+    @Nested
+    class FindAllPageBoardItems {
+
+        @DisplayName("성공 케이스")
+        @Test
+        void findAllPageBoardItems_happy_case() throws Exception {
+            // Given
+            List<BoardDto.FindItemResponse> itemResponseList = IntStream.rangeClosed(0, 10)
+                    .mapToObj(value -> BoardItemFixture.makeBoardItem())
+                    .map(BoardItemFixture::mappedBoardItemResponse)
+                    .collect(Collectors.toList());
+            given(findAllPageBoardItemUseCase.execute(PageRequest.of(0, 10)))
+                    .willReturn(new PageImpl<>(itemResponseList, PageRequest.of(0, 10), 30));
+
+            // When & Then
+            mockMvc.perform(get("/v1/board/item")
+                            .param("page", "0")
+                            .param("size", "10")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .characterEncoding(StandardCharsets.UTF_8)
+                    )
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.code").value(HttpStatus.OK.value()))
             ;
         }
     }

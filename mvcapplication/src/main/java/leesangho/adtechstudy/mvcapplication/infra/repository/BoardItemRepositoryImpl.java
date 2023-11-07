@@ -3,6 +3,8 @@ package leesangho.adtechstudy.mvcapplication.infra.repository;
 import leesangho.adtechstudy.domain.board.BoardItem;
 import leesangho.adtechstudy.domain.board.BoardItemRepository;
 import leesangho.adtechstudy.mvcapplication.infra.entity.BoardItemEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +55,13 @@ public class BoardItemRepositoryImpl implements BoardItemRepository {
     public void updateItem(BoardItem boardItem) {
         BoardItemEntity boardItemEntity = mappedBoardItemEntity(boardItem);
         boardItemJpaRepository.save(boardItemEntity);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Page<BoardItem> findAllByOffsetAndLimit(long offset, int limit) {
+        return boardItemJpaRepository.findAll(PageRequest.of((int) offset, limit))
+                .map(this::fromDomain);
     }
 
     private BoardItem fromDomain(BoardItemEntity boardItemEntity) {

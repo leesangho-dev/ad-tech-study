@@ -4,10 +4,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import leesangho.adtechstudy.mvcapplication.dto.BaseResponse;
 import leesangho.adtechstudy.mvcapplication.dto.BoardDto;
-import leesangho.adtechstudy.mvcapplication.usecase.DeleteBoardItemUseCase;
-import leesangho.adtechstudy.mvcapplication.usecase.FindBoardItemUseCase;
-import leesangho.adtechstudy.mvcapplication.usecase.SaveBoardItemUseCase;
-import leesangho.adtechstudy.mvcapplication.usecase.UpdateBoardItemUseCase;
+import leesangho.adtechstudy.mvcapplication.usecase.*;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -24,11 +24,14 @@ public class BoardController {
 
     private final UpdateBoardItemUseCase updateBoardItemUseCase;
 
-    public BoardController(SaveBoardItemUseCase saveBoardItemUseCase, FindBoardItemUseCase findBoardItemUseCase, DeleteBoardItemUseCase deleteBoardItemUseCase, UpdateBoardItemUseCase updateBoardItemUseCase) {
+    private final FindAllPageBoardItemUseCase findAllPageBoardItemUseCase;
+
+    public BoardController(SaveBoardItemUseCase saveBoardItemUseCase, FindBoardItemUseCase findBoardItemUseCase, DeleteBoardItemUseCase deleteBoardItemUseCase, UpdateBoardItemUseCase updateBoardItemUseCase, FindAllPageBoardItemUseCase findAllPageBoardItemUseCase) {
         this.saveBoardItemUseCase = saveBoardItemUseCase;
         this.findBoardItemUseCase = findBoardItemUseCase;
         this.deleteBoardItemUseCase = deleteBoardItemUseCase;
         this.updateBoardItemUseCase = updateBoardItemUseCase;
+        this.findAllPageBoardItemUseCase = findAllPageBoardItemUseCase;
     }
 
     @Operation(tags = "게시판", description = "게시글 등록", summary = "게시글 등록")
@@ -66,5 +69,11 @@ public class BoardController {
         return BaseResponse.ok("게시글을 수정 하였습니다.", itemIdResponse);
     }
 
-
+    @Operation(tags = "게시판", description = "게시글 목록 조회", summary = "게시글 목록 조회")
+    @GetMapping(value = "/item")
+    @PageableAsQueryParam
+    public BaseResponse<Page<BoardDto.FindItemResponse>> findAllPageBoardItems(Pageable pageable) {
+        Page<BoardDto.FindItemResponse> page = findAllPageBoardItemUseCase.execute(pageable);
+        return BaseResponse.ok("게시글 목록을 조회하였습니다.", page);
+    }
 }
