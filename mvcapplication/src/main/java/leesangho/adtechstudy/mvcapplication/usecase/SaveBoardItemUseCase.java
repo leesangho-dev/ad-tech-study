@@ -14,9 +14,9 @@ public class SaveBoardItemUseCase {
         this.boardItemCommandService = boardItemCommandService;
     }
 
-    public BoardDto.SaveItemResponse execute(BoardDto.SaveItemRequest saveItemRequest) {
+    public BoardDto.ItemIdResponse execute(BoardDto.SaveItemRequest saveItemRequest) {
         BoardItem boardItem = BoardItem.writeOf(saveItemRequest.getTitle(), saveItemRequest.getBody(), saveItemRequest.getWriter());
         String boardItemId = boardItemCommandService.saveItem(boardItem);
-        return BoardDto.SaveItemResponse.of(boardItemId);
+        return BoardDto.ItemIdResponse.of(boardItemId);
     }
 }

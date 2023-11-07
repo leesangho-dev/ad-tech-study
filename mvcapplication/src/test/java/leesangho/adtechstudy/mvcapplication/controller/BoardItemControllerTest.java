@@ -6,6 +6,7 @@ import leesangho.adtechstudy.mvcapplication.dto.BoardDto;
 import leesangho.adtechstudy.mvcapplication.usecase.DeleteBoardItemUseCase;
 import leesangho.adtechstudy.mvcapplication.usecase.FindBoardItemUseCase;
 import leesangho.adtechstudy.mvcapplication.usecase.SaveBoardItemUseCase;
+import leesangho.adtechstudy.mvcapplication.usecase.UpdateBoardItemUseCase;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -48,9 +49,12 @@ class BoardItemControllerTest {
     @Mock
     DeleteBoardItemUseCase deleteBoardItemUseCase;
 
+    @Mock
+    UpdateBoardItemUseCase updateBoardItemUseCase;
+
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new BoardController(saveBoardItemUseCase, findBoardItemUseCase, deleteBoardItemUseCase))
+        mockMvc = MockMvcBuilders.standaloneSetup(new BoardController(saveBoardItemUseCase, findBoardItemUseCase, deleteBoardItemUseCase, updateBoardItemUseCase))
                 .setControllerAdvice(new DefaultControllerAdvice())
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .build();
@@ -72,7 +76,7 @@ class BoardItemControllerTest {
             SaveBoardSampleRequest saveBoardSampleRequest = new SaveBoardSampleRequest("제목", "본문", "작성자");
             String body = objectMapper.writeValueAsString(saveBoardSampleRequest);
             given(saveBoardItemUseCase.execute(any()))
-                    .willReturn(BoardDto.SaveItemResponse.of(boardItemId));
+                    .willReturn(BoardDto.ItemIdResponse.of(boardItemId));
 
             // When & Then
             mockMvc.perform(post("/v1/board/item")
@@ -185,6 +189,7 @@ class BoardItemControllerTest {
                     )
                     .andDo(print())
                     .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
             ;
         }
 
@@ -202,11 +207,12 @@ class BoardItemControllerTest {
                     )
                     .andDo(print())
                     .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.code").value(HttpStatus.NOT_FOUND.value()))
             ;
         }
     }
 
-    @DisplayName("게시글 삭제")
+    @DisplayName("게시글 삭제 테스트")
     @Nested
     class DeleteBoardItem {
 
@@ -215,6 +221,7 @@ class BoardItemControllerTest {
         @DisplayName("성공 케이스")
         @Test
         void deleteBoardItem_happy_case() throws Exception {
+            // Given
             doNothing()
                     .when(deleteBoardItemUseCase)
                             .execute(boardItemId);
@@ -226,12 +233,14 @@ class BoardItemControllerTest {
                     )
                     .andDo(print())
                     .andExpect(status().isNoContent())
+                    .andExpect(jsonPath("$.code").value(HttpStatus.NO_CONTENT.value()))
             ;
         }
 
         @DisplayName("실패 케이스 - 게시글을 찾지 못함")
         @Test
         void deleteBoardItem_bad_case_not_found() throws Exception {
+            // Given
             doThrow(new NoSuchElementException("게시글을 찾지 못하였습니다."))
                     .when(deleteBoardItemUseCase)
                             .execute(boardItemId);
@@ -243,6 +252,104 @@ class BoardItemControllerTest {
                     )
                     .andDo(print())
                     .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.code").value(HttpStatus.NOT_FOUND.value()))
+            ;
+        }
+    }
+
+    @DisplayName("게시글 수정 테스트")
+    @Nested
+    class UpdateBoardItem {
+
+        String boardItemId = GUIDGenerator.newId();
+
+        @DisplayName("성공 케이스")
+        @Test
+        void updateBoardItem_happy_case() throws Exception {
+            // Given
+            UpdateBoardSampleRequest updateBoardSampleRequest = new UpdateBoardSampleRequest("제목", "본문", "작성자");
+            String body = objectMapper.writeValueAsString(updateBoardSampleRequest);
+            given(updateBoardItemUseCase.execute(any(), any()))
+                    .willReturn(BoardDto.ItemIdResponse.of(boardItemId));
+
+            // When & Then
+            mockMvc.perform(put("/v1/board/item/{id}", boardItemId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .characterEncoding(StandardCharsets.UTF_8)
+                            .content(body)
+                    )
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.code").value(HttpStatus.OK.value()))
+            ;
+        }
+
+        class UpdateBoardSampleRequest {
+
+            private String title;
+
+            private String body;
+
+            private String writer;
+
+            public UpdateBoardSampleRequest(String title, String body, String writer) {
+                this.title = title;
+                this.body = body;
+                this.writer = writer;
+            }
+
+            public String getTitle() {
+                return title;
+            }
+
+            public String getBody() {
+                return body;
+            }
+
+            public String getWriter() {
+                return writer;
+            }
+        }
+
+        @DisplayName("실패 케이스 - 게시글을 찾지 못함")
+        @Test
+        void updateBoardItem_bad_case_not_found() throws Exception {
+            // Given
+            UpdateBoardSampleRequest updateBoardSampleRequest = new UpdateBoardSampleRequest("제목", "본문", "작성자");
+            String body = objectMapper.writeValueAsString(updateBoardSampleRequest);
+            given(updateBoardItemUseCase.execute(any(), any()))
+                    .willThrow(new NoSuchElementException("게시글을 찾지 못하였습니다."));
+
+            // When & Then
+            mockMvc.perform(put("/v1/board/item/{id}", boardItemId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .characterEncoding(StandardCharsets.UTF_8)
+                            .content(body)
+                    )
+                    .andDo(print())
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.code").value(HttpStatus.NOT_FOUND.value()))
+            ;
+        }
+
+        @DisplayName("실패 케이스 - 게시글을 찾지 못함")
+        @Test
+        void updateBoardItem_bad_case_bad_request() throws Exception {
+            // Given
+            UpdateBoardSampleRequest updateBoardSampleRequest = new UpdateBoardSampleRequest("", "본문", "작성자");
+            String body = objectMapper.writeValueAsString(updateBoardSampleRequest);
+            given(updateBoardItemUseCase.execute(any(), any()))
+                    .willThrow(new IllegalArgumentException("제목이 없습니다."));
+
+            // When & Then
+            mockMvc.perform(put("/v1/board/item/{id}", boardItemId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .characterEncoding(StandardCharsets.UTF_8)
+                            .content(body)
+                    )
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
             ;
         }
     }

@@ -7,6 +7,7 @@ import leesangho.adtechstudy.mvcapplication.dto.BoardDto;
 import leesangho.adtechstudy.mvcapplication.usecase.DeleteBoardItemUseCase;
 import leesangho.adtechstudy.mvcapplication.usecase.FindBoardItemUseCase;
 import leesangho.adtechstudy.mvcapplication.usecase.SaveBoardItemUseCase;
+import leesangho.adtechstudy.mvcapplication.usecase.UpdateBoardItemUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -21,18 +22,21 @@ public class BoardController {
 
     private final DeleteBoardItemUseCase deleteBoardItemUseCase;
 
-    public BoardController(SaveBoardItemUseCase saveBoardItemUseCase, FindBoardItemUseCase findBoardItemUseCase, DeleteBoardItemUseCase deleteBoardItemUseCase) {
+    private final UpdateBoardItemUseCase updateBoardItemUseCase;
+
+    public BoardController(SaveBoardItemUseCase saveBoardItemUseCase, FindBoardItemUseCase findBoardItemUseCase, DeleteBoardItemUseCase deleteBoardItemUseCase, UpdateBoardItemUseCase updateBoardItemUseCase) {
         this.saveBoardItemUseCase = saveBoardItemUseCase;
         this.findBoardItemUseCase = findBoardItemUseCase;
         this.deleteBoardItemUseCase = deleteBoardItemUseCase;
+        this.updateBoardItemUseCase = updateBoardItemUseCase;
     }
 
     @Operation(tags = "게시판", description = "게시글 등록", summary = "게시글 등록")
     @PostMapping(value = "/item")
     @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponse<BoardDto.SaveItemResponse> saveBoardItem(@RequestBody BoardDto.SaveItemRequest saveItemRequest) {
-        BoardDto.SaveItemResponse saveItemResponse = saveBoardItemUseCase.execute(saveItemRequest);
-        return BaseResponse.createOf("게시글 생성이 완료 되었습니다.", saveItemResponse);
+    public BaseResponse<BoardDto.ItemIdResponse> saveBoardItem(@RequestBody BoardDto.SaveItemRequest saveItemRequest) {
+        BoardDto.ItemIdResponse itemIdResponse = saveBoardItemUseCase.execute(saveItemRequest);
+        return BaseResponse.createOf("게시글 생성이 완료 되었습니다.", itemIdResponse);
     }
 
     @Operation(tags = "게시판", description = "게시글 조회", summary = "게시글 조회")
@@ -51,4 +55,16 @@ public class BoardController {
         deleteBoardItemUseCase.execute(boardItemId);
         return BaseResponse.empty("게시글을 삭제 하였습니다.");
     }
+
+    @Operation(tags = "게시판", description = "게시글 수정", summary = "게시글 수정")
+    @PutMapping(value = "/item/{id}")
+    public BaseResponse<BoardDto.ItemIdResponse> updateBoardItem(
+            @Parameter(description = "게시글 아이디") @PathVariable(value = "id") String boardItemId,
+            @RequestBody BoardDto.UpdateItemRequest updateItemRequest) {
+
+        BoardDto.ItemIdResponse itemIdResponse = updateBoardItemUseCase.execute(boardItemId, updateItemRequest);
+        return BaseResponse.ok("게시글을 수정 하였습니다.", itemIdResponse);
+    }
+
+
 }

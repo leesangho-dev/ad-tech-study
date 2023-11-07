@@ -20,15 +20,19 @@ public class BoardItemRepositoryImpl implements BoardItemRepository {
     @Transactional
     @Override
     public String saveItem(BoardItem boardItem) {
-        BoardItemEntity boardItemEntity = BoardItemEntity.builder()
+        BoardItemEntity boardItemEntity = mappedBoardItemEntity(boardItem);
+        boardItemJpaRepository.save(boardItemEntity);
+        return boardItem.getId();
+    }
+
+    private BoardItemEntity mappedBoardItemEntity(BoardItem boardItem) {
+        return BoardItemEntity.builder()
                 .id(boardItem.getId())
                 .title(boardItem.getTitle())
                 .body(boardItem.getBody())
                 .created(boardItem.getCreated().getId())
                 .modified(boardItem.getModified().getId())
                 .build();
-        boardItemJpaRepository.save(boardItemEntity);
-        return boardItem.getId();
     }
 
     @Transactional(readOnly = true)
@@ -42,6 +46,13 @@ public class BoardItemRepositoryImpl implements BoardItemRepository {
     @Override
     public void delete(BoardItem boardItem) {
         boardItemJpaRepository.deleteById(boardItem.getId());
+    }
+
+    @Transactional
+    @Override
+    public void updateItem(BoardItem boardItem) {
+        BoardItemEntity boardItemEntity = mappedBoardItemEntity(boardItem);
+        boardItemJpaRepository.save(boardItemEntity);
     }
 
     private BoardItem fromDomain(BoardItemEntity boardItemEntity) {

@@ -9,4 +9,6 @@ public interface BoardItemRepository {
     Optional<BoardItem> findById(String boardItemId);
 
     void delete(BoardItem boardItem);
+
+    void updateItem(BoardItem boardItem);
 }

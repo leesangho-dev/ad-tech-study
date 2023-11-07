@@ -20,4 +20,8 @@ public class BoardItemCommandService {
     public void deleteItem(BoardItem boardItem) {
         boardItemRepository.delete(boardItem);
     }
+
+    public void updateItem(BoardItem boardItem) {
+        boardItemRepository.updateItem(boardItem);
+    }
 }
