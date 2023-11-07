@@ -7,4 +7,6 @@ public interface BoardItemRepository {
     String saveItem(BoardItem boardItem);
 
     Optional<BoardItem> findById(String boardItemId);
+
+    void delete(BoardItem boardItem);
 }

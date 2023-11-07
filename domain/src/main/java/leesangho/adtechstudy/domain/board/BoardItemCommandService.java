@@ -16,4 +16,8 @@ public class BoardItemCommandService {
     public String saveItem(BoardItem boardItem) {
         return boardItemRepository.saveItem(boardItem);
     }
+
+    public void deleteItem(BoardItem boardItem) {
+        boardItemRepository.delete(boardItem);
+    }
 }

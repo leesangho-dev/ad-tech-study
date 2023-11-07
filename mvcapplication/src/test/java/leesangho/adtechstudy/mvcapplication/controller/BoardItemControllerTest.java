@@ -3,6 +3,7 @@ package leesangho.adtechstudy.mvcapplication.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import leesangho.adtechstudy.domain.id.GUIDGenerator;
 import leesangho.adtechstudy.mvcapplication.dto.BoardDto;
+import leesangho.adtechstudy.mvcapplication.usecase.DeleteBoardItemUseCase;
 import leesangho.adtechstudy.mvcapplication.usecase.FindBoardItemUseCase;
 import leesangho.adtechstudy.mvcapplication.usecase.SaveBoardItemUseCase;
 import org.junit.jupiter.api.*;
@@ -24,8 +25,9 @@ import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -43,9 +45,12 @@ class BoardItemControllerTest {
     @Mock
     FindBoardItemUseCase findBoardItemUseCase;
 
+    @Mock
+    DeleteBoardItemUseCase deleteBoardItemUseCase;
+
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new BoardController(saveBoardItemUseCase, findBoardItemUseCase))
+        mockMvc = MockMvcBuilders.standaloneSetup(new BoardController(saveBoardItemUseCase, findBoardItemUseCase, deleteBoardItemUseCase))
                 .setControllerAdvice(new DefaultControllerAdvice())
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .build();
@@ -192,6 +197,47 @@ class BoardItemControllerTest {
 
             // When & then
             mockMvc.perform(get("/v1/board/item/{id}", boardItemId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .characterEncoding(StandardCharsets.UTF_8)
+                    )
+                    .andDo(print())
+                    .andExpect(status().isNotFound())
+            ;
+        }
+    }
+
+    @DisplayName("게시글 삭제")
+    @Nested
+    class DeleteBoardItem {
+
+        String boardItemId = GUIDGenerator.newId();
+
+        @DisplayName("성공 케이스")
+        @Test
+        void deleteBoardItem_happy_case() throws Exception {
+            doNothing()
+                    .when(deleteBoardItemUseCase)
+                            .execute(boardItemId);
+
+            // When & then
+            mockMvc.perform(delete("/v1/board/item/{id}", boardItemId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .characterEncoding(StandardCharsets.UTF_8)
+                    )
+                    .andDo(print())
+                    .andExpect(status().isNoContent())
+            ;
+        }
+
+        @DisplayName("실패 케이스 - 게시글을 찾지 못함")
+        @Test
+        void deleteBoardItem_bad_case_not_found() throws Exception {
+            doThrow(new NoSuchElementException("게시글을 찾지 못하였습니다."))
+                    .when(deleteBoardItemUseCase)
+                            .execute(boardItemId);
+
+            // When & then
+            mockMvc.perform(delete("/v1/board/item/{id}", boardItemId)
                             .contentType(MediaType.APPLICATION_JSON)
                             .characterEncoding(StandardCharsets.UTF_8)
                     )

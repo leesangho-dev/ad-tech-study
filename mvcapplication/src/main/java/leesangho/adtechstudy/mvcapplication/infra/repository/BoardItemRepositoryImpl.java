@@ -38,6 +38,12 @@ public class BoardItemRepositoryImpl implements BoardItemRepository {
                 .map(this::fromDomain);
     }
 
+    @Transactional
+    @Override
+    public void delete(BoardItem boardItem) {
+        boardItemJpaRepository.deleteById(boardItem.getId());
+    }
+
     private BoardItem fromDomain(BoardItemEntity boardItemEntity) {
         return BoardItem.builder()
                 .id(boardItemEntity.getId())
