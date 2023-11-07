@@ -1,5 +1,6 @@
 package leesangho.adtechstudy.webflux.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import leesangho.adtechstudy.webflux.dto.BaseResponse;
 import leesangho.adtechstudy.webflux.dto.BoardDto;
 import leesangho.adtechstudy.webflux.usecase.SaveBoardItemUseCase;
@@ -20,6 +21,7 @@ public class BoardController {
         this.saveBoardItemUseCase = saveBoardItemUseCase;
     }
 
+    @Operation(tags = "게시판", description = "게시글 등록", summary = "게시글 등록")
     @PostMapping(value = "/item", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Mono<BaseResponse<BoardDto.ItemIdResponse>> saveBoardItem(@RequestBody BoardDto.SaveItemRequest saveItemRequest) {
         return saveBoardItemUseCase.execute(saveItemRequest)

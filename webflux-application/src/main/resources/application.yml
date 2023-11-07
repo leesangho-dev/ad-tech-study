@@ -1,0 +1,4 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://studyuser:1234@localhost/study?authSource=admin
