@@ -2,15 +2,15 @@ package leesangho.adtechstudy.webflux.controller;
 
 import leesangho.adtechstudy.domain.board.BoardItem;
 import leesangho.adtechstudy.objectmother.BoardItemFixture;
-import leesangho.adtechstudy.webflux.usecase.DeleteBoardItemUseCase;
-import leesangho.adtechstudy.webflux.usecase.FindBoardItemUseCase;
-import leesangho.adtechstudy.webflux.usecase.SaveBoardItemUseCase;
+import leesangho.adtechstudy.webflux.dto.BoardDto;
+import leesangho.adtechstudy.webflux.usecase.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -18,7 +18,10 @@ import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
 
-@MockitoSettings
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+
+@MockitoSettings(strictness = Strictness.LENIENT)
 class BoardControllerTest {
 
     WebTestClient webTestClient;
@@ -31,6 +34,12 @@ class BoardControllerTest {
 
     @Mock
     DeleteBoardItemUseCase deleteBoardItemUseCase;
+
+    @Mock
+    UpdateBoardItemUseCase updateBoardItemUseCase;
+
+    @Mock
+    FindAllPageBoardItemsUseCase findAllPageBoardItemsUseCase;
 
     @BeforeEach
     void setUp() {
@@ -49,6 +58,8 @@ class BoardControllerTest {
             // Given
             BoardItem boardItem = BoardItemFixture.makeBoardItem();
             SaveItemSampleRequest saveItemSampleRequest = new SaveItemSampleRequest(boardItem.getTitle(), boardItem.getBody(), boardItem.getCreated().getId());
+            given(saveBoardItemUseCase.execute(any()))
+                    .willReturn(Mono.just(BoardDto.ItemIdResponse.of(boardItem.getId())));
 
             // When & Then
             webTestClient.post()

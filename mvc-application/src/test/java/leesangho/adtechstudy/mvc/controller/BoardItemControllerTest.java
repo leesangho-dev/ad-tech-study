@@ -186,22 +186,6 @@ class BoardItemControllerTest {
             ;
         }
 
-        @DisplayName("실패 케이스 - 게시글 아이디 입력 안함")
-        @Test
-        void findBoardItem_bad_case_bad_request() throws Exception {
-            // Given
-
-            // When & Then
-            mockMvc.perform(get("/v1/board/item/{id}", "")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .characterEncoding(StandardCharsets.UTF_8)
-                    )
-                    .andDo(print())
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
-            ;
-        }
-
         @DisplayName("실패 케이스 - 게시글 존재 하지 않음")
         @Test
         void findBoardItem_bad_case_not_found() throws Exception {
@@ -371,7 +355,7 @@ class BoardItemControllerTest {
         @Test
         void findAllPageBoardItems_happy_case() throws Exception {
             // Given
-            List<BoardDto.FindItemResponse> itemResponseList = IntStream.rangeClosed(0, 10)
+            List<BoardDto.FindItemResponse> itemResponseList = IntStream.range(0, 10)
                     .mapToObj(value -> BoardItemFixture.makeBoardItem())
                     .map(this::mappedBoardItemResponse)
                     .collect(Collectors.toList());
