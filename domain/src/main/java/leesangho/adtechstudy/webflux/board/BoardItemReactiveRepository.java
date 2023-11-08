@@ -1,6 +1,7 @@
 package leesangho.adtechstudy.webflux.board;
 
 import leesangho.adtechstudy.domain.board.BoardItem;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface BoardItemReactiveRepository {
@@ -13,5 +14,5 @@ public interface BoardItemReactiveRepository {
 
     Mono<String> updateItem(BoardItem boardItem);
 
-    <T extends Iterable<BoardItem>> Mono<T> findAllByOffsetAndLimit(long offset, int pageSize);
+    Flux<BoardItem> findAllByOffsetAndLimit(long offset, int pageSize);
 }

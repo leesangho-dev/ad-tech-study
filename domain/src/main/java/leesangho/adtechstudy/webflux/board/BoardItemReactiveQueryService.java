@@ -1,9 +1,11 @@
 package leesangho.adtechstudy.webflux.board;
 
+import leesangho.adtechstudy.domain.board.BoardItem;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import javax.inject.Inject;
 import javax.inject.Named;
-import leesangho.adtechstudy.domain.board.BoardItem;
-import reactor.core.publisher.Mono;
 
 @Named
 public class BoardItemReactiveQueryService {
@@ -19,7 +21,7 @@ public class BoardItemReactiveQueryService {
         return boardItemReactiveRepository.findById(boardItemId);
     }
 
-    public <T extends Iterable<BoardItem>> Mono<T> findAllByOffsetAndLimit(long offset, int pageSize) {
+    public Flux<BoardItem> findAllByOffsetAndLimit(long offset, int pageSize) {
         return boardItemReactiveRepository.findAllByOffsetAndLimit(offset, pageSize);
     }
 }
