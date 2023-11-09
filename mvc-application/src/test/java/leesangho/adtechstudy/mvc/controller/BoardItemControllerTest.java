@@ -26,7 +26,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -165,14 +164,14 @@ class BoardItemControllerTest {
     @Nested
     class FindBoardItem {
 
-        String boardItemId = GUIDGenerator.newId();
-
         @DisplayName("성공 케이스")
         @Test
         void findBoardItem_happy_case() throws Exception {
             // Given
+            BoardItem boardItem = BoardItemFixture.fixtureBoardItem();
+            String boardItemId = boardItem.getId();
             given(findBoardItemUseCase.execute(boardItemId))
-                    .willReturn(BoardDto.FindItemResponse.of(boardItemId, "제목", "본문", "작성자" ,"작성자"));
+                    .willReturn(BoardDto.FindItemResponse.of(boardItemId, boardItem.getTitle(), boardItem.getBody(), boardItem.getCreated().getId(), boardItem.getModified().getId()));
 
             // When & Then
             mockMvc.perform(get("/v1/board/item/{id}", boardItemId)
@@ -190,6 +189,7 @@ class BoardItemControllerTest {
         @Test
         void findBoardItem_bad_case_not_found() throws Exception {
             // Given
+            String boardItemId = GUIDGenerator.newId();
             given(findBoardItemUseCase.execute(boardItemId))
                     .willThrow(new NoSuchElementException("게시글을 찾을 수 없습니다."));
 
@@ -355,10 +355,11 @@ class BoardItemControllerTest {
         @Test
         void findAllPageBoardItems_happy_case() throws Exception {
             // Given
-            List<BoardDto.FindItemResponse> itemResponseList = IntStream.range(0, 10)
-                    .mapToObj(value -> BoardItemFixture.makeBoardItem())
+            List<BoardDto.FindItemResponse> itemResponseList = BoardItemFixture.fixtureBoardItems(10)
+                    .stream()
                     .map(this::mappedBoardItemResponse)
                     .collect(Collectors.toList());
+
             given(findAllPageBoardItemUseCase.execute(PageRequest.of(0, 10)))
                     .willReturn(new PageImpl<>(itemResponseList, PageRequest.of(0, 10), 30));
 

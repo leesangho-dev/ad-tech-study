@@ -25,6 +25,7 @@ subprojects {
 
     dependencies {
         implementation 'javax.inject:javax.inject:1'
+        implementation 'jakarta.validation:jakarta.validation-api:2.0.2'
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
         testImplementation platform('org.junit:junit-bom:5.9.1')

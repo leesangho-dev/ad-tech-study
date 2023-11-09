@@ -23,14 +23,18 @@ public class BoardItem {
 
     private final MemberId modified;
 
-    @Builder
-    protected BoardItem(String id, String title, String body, String created, String modified) {
+    protected BoardItem(String id, String title, String body, MemberId created, MemberId modified) {
         this.id = id;
         validate(title, body);
         this.title = title;
         this.body = body;
-        this.created = MemberId.of(created);
-        this.modified = MemberId.of(modified);
+        this.created = created;
+        this.modified = modified;
+    }
+
+    @Builder
+    protected BoardItem(String id, String title, String body, String created, String modified) {
+        this(id, title, body, MemberId.of(created), MemberId.of(modified));
     }
 
     private void validate(String title, String body) {

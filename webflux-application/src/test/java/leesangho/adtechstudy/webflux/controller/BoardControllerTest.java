@@ -56,7 +56,7 @@ class BoardControllerTest {
         @Test
         void saveBoardItem_happy_case() {
             // Given
-            BoardItem boardItem = BoardItemFixture.makeBoardItem();
+            BoardItem boardItem = BoardItemFixture.fixtureBoardItem();
             SaveItemSampleRequest saveItemSampleRequest = new SaveItemSampleRequest(boardItem.getTitle(), boardItem.getBody(), boardItem.getCreated().getId());
             given(saveBoardItemUseCase.execute(any()))
                     .willReturn(Mono.just(BoardDto.ItemIdResponse.of(boardItem.getId())));
