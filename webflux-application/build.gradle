@@ -11,16 +11,29 @@ repositories {
 
 dependencies {
     implementation project(":domain")
-    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springdoc:springdoc-openapi-webflux-ui:1.7.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation testFixtures(project(":domain"))
+    if (isMacOs() && isAArch64()) {
+        implementation 'io.netty:netty-resolver-dns-native-macos:4.1.99.Final:osx-aarch_64'
+    }
 }
 
 test {
     useJUnitPlatform()
+}
+
+static def isMacOs() {
+    return System.getProperty('os.name').toLowerCase().contains('mac')
+}
+
+static def isAArch64() {
+    return System.getProperty('os.arch').toLowerCase().contains('aarch64')
 }

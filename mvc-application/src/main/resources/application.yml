@@ -8,3 +8,8 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: update
+  redis:
+    url: redis://localhost:6379
+
+  cache:
+    type: redis

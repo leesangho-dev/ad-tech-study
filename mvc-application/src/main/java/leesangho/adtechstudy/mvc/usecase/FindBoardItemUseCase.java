@@ -3,6 +3,7 @@ package leesangho.adtechstudy.mvc.usecase;
 import leesangho.adtechstudy.domain.board.BoardItem;
 import leesangho.adtechstudy.mvc.board.BoardItemQueryService;
 import leesangho.adtechstudy.mvc.dto.BoardDto;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +15,7 @@ public class FindBoardItemUseCase {
         this.boardItemQueryService = boardItemQueryService;
     }
 
+    @Cacheable(value = "findBoardItemUseCase", key = "#boardItemId")
     public BoardDto.FindItemResponse execute(String boardItemId) {
         BoardItem boardItem = boardItemQueryService.findById(boardItemId);
         return BoardDto.FindItemResponse.of(
