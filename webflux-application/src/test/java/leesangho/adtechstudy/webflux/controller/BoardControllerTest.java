@@ -103,4 +103,10 @@ class BoardControllerTest {
             }
         }
     }
+
+    @DisplayName("")
+    @Nested
+    class FindBoardItem {
+
+    }
 }

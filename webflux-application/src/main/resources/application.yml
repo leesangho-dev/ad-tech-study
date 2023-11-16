@@ -4,6 +4,3 @@ spring:
       uri: mongodb://studyuser:1234@localhost/study?authSource=admin
   redis:
     url: redis://localhost:6379
-
-  cache:
-    type: redis
