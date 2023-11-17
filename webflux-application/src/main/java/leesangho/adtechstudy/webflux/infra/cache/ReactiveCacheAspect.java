@@ -45,7 +45,7 @@ public class ReactiveCacheAspect {
     private Mono<?> cacheWrite(ProceedingJoinPoint proceedingJoinPoint, String cacheKey) {
         try {
             return ((Mono<?>) proceedingJoinPoint.proceed(proceedingJoinPoint.getArgs()))
-                    .doOnNext(value -> reactiveCacheManger.setCache(cacheKey, value));
+                    .doOnSuccess(value -> reactiveCacheManger.setCache(cacheKey, value));
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
