@@ -55,7 +55,7 @@ public class ReactiveCacheAspect {
         StandardEvaluationContext standardEvaluationContext = makeStandardEvaluationContext(proceedingJoinPoint);
         Object key = EXPRESSION_PARSER.parseExpression(annotation.key())
                 .getValue(standardEvaluationContext, String.class);
-        return annotation.name() + "::" + key;
+        return annotation.value() + "::" + key;
     }
 
     private StandardEvaluationContext makeStandardEvaluationContext(ProceedingJoinPoint proceedingJoinPoint) {
