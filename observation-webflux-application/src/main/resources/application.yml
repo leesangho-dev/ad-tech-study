@@ -1,0 +1,22 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://studyuser:1234@localhost/study?authSource=admin
+  application:
+    name: observation-webflux-app
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: metrics, health, beans
+
+logging:
+  level:
+    org.springframework.web.reactive.function.client.WebClient: debug
+    org.springframework.data.mongodb.core.ReactiveMongoTemplate: debug
+#    org.zalando.logbook: trace
+
+logbook:
+  filter:
+    enabled: true

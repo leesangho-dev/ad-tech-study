@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+}
+
+group = 'leesangho.adtechstudy'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.3.0'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation platform('io.micrometer:micrometer-bom:1.12.1')
+    implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    implementation platform("org.zalando:logbook-bom:3.7.2")
+    implementation 'org.zalando:logbook-spring-boot-webflux-autoconfigure'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.projectreactor:reactor-test'
+
+    if (isMacOs() && isAArch64()) {
+        implementation 'io.netty:netty-resolver-dns-native-macos:4.1.99.Final:osx-aarch_64'
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+static def isMacOs() {
+    return System.getProperty('os.name').toLowerCase().contains('mac')
+}
+
+static def isAArch64() {
+    return System.getProperty('os.arch').toLowerCase().contains('aarch64')
+}

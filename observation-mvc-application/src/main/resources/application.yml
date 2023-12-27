@@ -1,0 +1,27 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://studyuser:1234@localhost/study?authSource=admin
+  application:
+    name: observation-mvc-app
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics
+
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: debug
+    org.springframework.web.client.RestTemplate: debug
+    org.springframework.web.client.RestClient: debug
+#    org.zalando.logbook: trace
+
+
+
