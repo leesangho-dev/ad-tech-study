@@ -21,7 +21,7 @@ logging:
     org.springframework.data.mongodb.core.MongoTemplate: debug
     org.springframework.web.client.RestTemplate: debug
     org.springframework.web.client.RestClient: debug
-#    org.zalando.logbook: trace
+    org.zalando.logbook: trace
 
 
 

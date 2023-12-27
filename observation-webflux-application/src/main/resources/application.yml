@@ -15,7 +15,7 @@ logging:
   level:
     org.springframework.web.reactive.function.client.WebClient: debug
     org.springframework.data.mongodb.core.ReactiveMongoTemplate: debug
-#    org.zalando.logbook: trace
+    org.zalando.logbook: trace
 
 logbook:
   filter:
