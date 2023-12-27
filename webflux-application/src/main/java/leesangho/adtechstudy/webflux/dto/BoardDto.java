@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 
 public class BoardDto {
 
+  private BoardDto() {
+  }
+
     @Data
     @NoArgsConstructor
     @AllArgsConstructor

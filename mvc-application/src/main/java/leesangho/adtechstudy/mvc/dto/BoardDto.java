@@ -7,67 +7,70 @@ import lombok.NoArgsConstructor;
 
 public class BoardDto {
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Schema(description = "게시글 등록 요청")
-    public static class SaveItemRequest {
+  private BoardDto() {
+  }
 
-        @Schema(description = "제목", maxLength = 100)
-        private String title;
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Schema(description = "게시글 등록 요청")
+  public static class SaveItemRequest {
 
-        @Schema(description = "본문", maxLength = 4000)
-        private String body;
+    @Schema(description = "제목", maxLength = 100)
+    private String title;
 
-        @Schema(description = "작성자 아이디", maxLength = 100)
-        private String writer;
-    }
+    @Schema(description = "본문", maxLength = 4000)
+    private String body;
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor(staticName = "of")
-    @Schema(description = "게시글 아이디 응답")
-    public static class ItemIdResponse {
+    @Schema(description = "작성자 아이디", maxLength = 100)
+    private String writer;
+  }
 
-        @Schema(description = "게시글 아이디", format = "uuid")
-        private String id;
-    }
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor(staticName = "of")
+  @Schema(description = "게시글 아이디 응답")
+  public static class ItemIdResponse {
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor(staticName = "of")
-    @Schema(description = "게시글 조회 응답")
-    public static class FindItemResponse {
+    @Schema(description = "게시글 아이디", format = "uuid")
+    private String id;
+  }
 
-        @Schema(description = "게시글 아이디", format = "uuid")
-        private String id;
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor(staticName = "of")
+  @Schema(description = "게시글 조회 응답")
+  public static class FindItemResponse {
 
-        @Schema(description = "제목", maxLength = 100)
-        private String title;
+    @Schema(description = "게시글 아이디", format = "uuid")
+    private String id;
 
-        @Schema(description = "본문", maxLength = 4000)
-        private String body;
+    @Schema(description = "제목", maxLength = 100)
+    private String title;
 
-        @Schema(description = "작성자 아이디", maxLength = 100)
-        private String created;
+    @Schema(description = "본문", maxLength = 4000)
+    private String body;
 
-        @Schema(description = "수정자 아이디", maxLength = 100)
-        private String modified;
-    }
+    @Schema(description = "작성자 아이디", maxLength = 100)
+    private String created;
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Schema(description = "게시글 수정 요청")
-    public static class UpdateItemRequest {
+    @Schema(description = "수정자 아이디", maxLength = 100)
+    private String modified;
+  }
 
-        @Schema(description = "제목", maxLength = 100)
-        private String title;
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Schema(description = "게시글 수정 요청")
+  public static class UpdateItemRequest {
 
-        @Schema(description = "본문", maxLength = 4000)
-        private String body;
+    @Schema(description = "제목", maxLength = 100)
+    private String title;
 
-        @Schema(description = "수정자 아이디", maxLength = 100)
-        private String writer;
-    }
+    @Schema(description = "본문", maxLength = 4000)
+    private String body;
+
+    @Schema(description = "수정자 아이디", maxLength = 100)
+    private String writer;
+  }
 }

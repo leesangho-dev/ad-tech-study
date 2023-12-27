@@ -1,9 +1,17 @@
 package leesangho.adtechstudy.webflux.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+
+import java.nio.charset.StandardCharsets;
 import leesangho.adtechstudy.domain.board.BoardItem;
 import leesangho.adtechstudy.objectmother.BoardItemFixture;
 import leesangho.adtechstudy.webflux.dto.BoardDto;
-import leesangho.adtechstudy.webflux.usecase.*;
+import leesangho.adtechstudy.webflux.usecase.DeleteBoardItemUseCase;
+import leesangho.adtechstudy.webflux.usecase.FindAllPageBoardItemsUseCase;
+import leesangho.adtechstudy.webflux.usecase.FindBoardItemUseCase;
+import leesangho.adtechstudy.webflux.usecase.SaveBoardItemUseCase;
+import leesangho.adtechstudy.webflux.usecase.UpdateBoardItemUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -14,12 +22,8 @@ import org.mockito.quality.Strictness;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
-import java.nio.charset.StandardCharsets;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
 class BoardControllerTest {
@@ -108,5 +112,7 @@ class BoardControllerTest {
     @Nested
     class FindBoardItem {
 
+      WebClient webClient = WebClient.builder()
+          .build();
     }
 }

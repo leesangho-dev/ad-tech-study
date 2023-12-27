@@ -19,9 +19,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springdoc:springdoc-openapi-webflux-ui:1.7.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
     testImplementation 'io.projectreactor:reactor-test'
-    testImplementation 'io.projectreactor.tools:blockhound-junit-platform:1.0.6.RELEASE'
+//    testImplementation 'io.projectreactor.tools:blockhound-junit-platform:1.0.6.RELEASE'
 
     testImplementation testFixtures(project(":domain"))
     if (isMacOs() && isAArch64()) {

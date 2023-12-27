@@ -1,5 +1,6 @@
 package leesangho.adtechstudy.webflux.infra.repository;
 
+import java.util.NoSuchElementException;
 import leesangho.adtechstudy.domain.board.BoardItem;
 import leesangho.adtechstudy.webflux.board.BoardItemReactiveRepository;
 import leesangho.adtechstudy.webflux.infra.document.BoardItemDocument;
@@ -7,8 +8,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.NoSuchElementException;
 
 @Repository
 public class BoardItemReactiveRepositoryImpl implements BoardItemReactiveRepository {
@@ -60,9 +59,7 @@ public class BoardItemReactiveRepositoryImpl implements BoardItemReactiveReposit
 
     @Override
     public Mono<String> updateItem(BoardItem boardItem) {
-        BoardItemDocument boardItemDocument = mappedDocument(boardItem);
-        return boardItemReactiveMongoRepository.save(boardItemDocument)
-                .map(BoardItemDocument::getId);
+      return saveItem(boardItem);
     }
 
     @Override
