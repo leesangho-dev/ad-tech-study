@@ -15,6 +15,7 @@ server:
   tomcat:
     mbeanregistry:
       enabled: true
+  port: 8081
 
 logging:
   level:
@@ -22,6 +23,7 @@ logging:
     org.springframework.web.client.RestTemplate: debug
     org.springframework.web.client.RestClient: debug
     org.zalando.logbook: trace
-
+  file:
+    path: /Users/emart/docker/log/observation/mvc
 
 

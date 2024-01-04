@@ -113,3 +113,16 @@
 * 벤치마킹 해보기
 * blockHound 사용해보기
 * 부족한 테스트코드 추가해보기 
+
+### Spring boot 3.X
+
+기존 프로젝트는 Spring boot 2.7.x 버전이였지만 3.2.1 버전으로 수정하였습니다.
+
+### Spring Observation
+
+Spring Observation 기능 테스트를 위한 모듈 프로젝트 추가
+
+* observation-mvc-application
+* observation-webflux-application
+
+위 프로젝트는 logging traceId 를 테스트 하기 위해 추가하였습니다.
