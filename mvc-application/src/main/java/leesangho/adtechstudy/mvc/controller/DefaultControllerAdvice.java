@@ -1,5 +1,8 @@
 package leesangho.adtechstudy.mvc.controller;
 
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.NoSuchElementException;
@@ -15,6 +18,7 @@ import org.springframework.web.filter.ServerHttpObservationFilter;
 @RestControllerAdvice
 public class DefaultControllerAdvice {
 
+  @ApiResponse(responseCode = "404", description = "찾을 수 없음", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\"code\":404,\"message\":\"요소를 찾을 수 없습니다.\",\"data\":null}")))
   @ExceptionHandler({NoSuchElementException.class})
   @ResponseStatus(HttpStatus.NOT_FOUND)
   public BaseResponse<Void> notFoundError(HttpServletRequest request, Exception exception) {
@@ -24,6 +28,7 @@ public class DefaultControllerAdvice {
     return BaseResponse.of(HttpStatus.NOT_FOUND, exception.getMessage(), null);
   }
 
+  @ApiResponse(responseCode = "400", description = "클라이언트 에러 발생", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\"code\":400,\"message\":\"에러메시지가 출력됩니다.\",\"data\":null}")))
   @ExceptionHandler({IllegalArgumentException.class,
       IllegalStateException.class, ServletException.class})
   @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -34,6 +39,7 @@ public class DefaultControllerAdvice {
     return BaseResponse.clientErrorOf(exception.getMessage());
   }
 
+  @ApiResponse(responseCode = "500", description = "서버 에러 발생", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\"code\":500,\"message\":\"에러메시지가 출력됩니다.\",\"data\":null}")))
   @ExceptionHandler
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public BaseResponse<Void> serverError(Exception exception) {
