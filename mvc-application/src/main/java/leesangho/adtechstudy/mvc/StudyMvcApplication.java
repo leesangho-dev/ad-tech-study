@@ -3,8 +3,7 @@ package leesangho.adtechstudy.mvc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages = {"leesangho.adtechstudy.domain",
-    "leesangho.adtechstudy.mvc"})
+@SpringBootApplication
 public class StudyMvcApplication {
 
   public static void main(String[] args) {

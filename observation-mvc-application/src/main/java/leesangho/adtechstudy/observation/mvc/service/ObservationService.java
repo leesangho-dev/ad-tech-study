@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -19,13 +18,10 @@ public class ObservationService {
 
   private final RestTemplate restTemplate;
 
-  private final RestClient restClient;
-
   public ObservationService(ObservationDocumentRepository observationDocumentRepository,
-      RestTemplate restTemplate, RestClient restClient) {
+      RestTemplate restTemplate) {
     this.observationDocumentRepository = observationDocumentRepository;
     this.restTemplate = restTemplate;
-    this.restClient = restClient;
   }
 
   public void basic() {
@@ -53,11 +49,4 @@ public class ObservationService {
     restTemplate.getForEntity("http://localhost:8080/v3/api-docs/swagger-config", String.class);
   }
 
-  public void restApiCallByClient() {
-    log.info(LOG_FORMAT, "restApiCallByClient");
-    restClient.get()
-        .uri("http://localhost:8080/v3/api-docs/swagger-config")
-        .retrieve()
-        .body(String.class);
-  }
 }

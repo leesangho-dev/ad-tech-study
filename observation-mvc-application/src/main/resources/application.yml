@@ -25,5 +25,6 @@ logging:
     org.zalando.logbook: trace
   file:
     path: /Users/emart/docker/log/observation/mvc
-
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX}){faint} %clr(%5p) %clr(${pid}){magenta} %clr(---){faint} %clr([${spring.application.name:}]){faint} %clr([%15.15t]){faint} %clr([%32X{traceId:-}-%16X{spanId:-}]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx"
 

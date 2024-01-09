@@ -51,7 +51,6 @@ public class ObservationController {
   public void restApiCall() {
     log.info(LOG_FORMAT, "restApiCall");
     observationService.restApiCallByTemplate();
-    observationService.restApiCallByClient();
   }
 
   @GetMapping("/client-error")

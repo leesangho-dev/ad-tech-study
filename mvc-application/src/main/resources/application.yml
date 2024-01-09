@@ -2,10 +2,10 @@ spring:
   application:
     name: mvc-application
   datasource:
-    url: jdbc:mariadb://localhost:3306/study
-    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:sqlserver://localhost:1433;database=study;trustServerCertificate=false;encrypt=false
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     username: studyuser
-    password: 1234
+    password: $a123456
   jpa:
     open-in-view: false
     hibernate:
