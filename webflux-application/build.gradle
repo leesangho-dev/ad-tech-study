@@ -20,6 +20,7 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
+    testImplementation 'io.projectreactor.tools:blockhound-junit-platform:1.0.6.RELEASE'
 
     testImplementation testFixtures(project(":domain"))
     if (isMacOs() && isAArch64()) {
@@ -37,4 +38,12 @@ static def isMacOs() {
 
 static def isAArch64() {
     return System.getProperty('os.arch').toLowerCase().contains('aarch64')
+}
+
+tasks.withType(Test).all {
+    if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_13)) {
+        jvmArgs += [
+                "-XX:+AllowRedefinitionToAddDeleteMethods"
+        ]
+    }
 }

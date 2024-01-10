@@ -4,6 +4,8 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.14.RELEASE'
 }
 
+bootJar.enabled = false
+
 subprojects {
     group = 'leesangho.adtechstudy'
     version = '0.0.1-SNAPSHOT'
