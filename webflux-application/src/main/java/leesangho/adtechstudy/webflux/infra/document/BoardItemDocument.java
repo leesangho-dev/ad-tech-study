@@ -24,7 +24,8 @@ public class BoardItemDocument {
     }
 
     @Builder
-    protected BoardItemDocument(String id, String title, String body, String created, String modified) {
+    protected BoardItemDocument(String id, String title, String body, String created,
+        String modified) {
         this.id = id;
         this.title = title;
         this.body = body;

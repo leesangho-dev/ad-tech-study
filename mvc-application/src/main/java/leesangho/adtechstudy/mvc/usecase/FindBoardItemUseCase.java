@@ -9,21 +9,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class FindBoardItemUseCase {
 
-  private final BoardItemQueryService boardItemQueryService;
+    private final BoardItemQueryService boardItemQueryService;
 
-  public FindBoardItemUseCase(BoardItemQueryService boardItemQueryService) {
-    this.boardItemQueryService = boardItemQueryService;
-  }
+    public FindBoardItemUseCase(BoardItemQueryService boardItemQueryService) {
+        this.boardItemQueryService = boardItemQueryService;
+    }
 
-  @Cacheable(value = "findBoardItemUseCase", key = "#boardItemId")
-  public BoardDto.FindItemResponse execute(String boardItemId) {
-    BoardItem boardItem = boardItemQueryService.findById(boardItemId);
-    return BoardDto.FindItemResponse.of(
-        boardItem.getId(),
-        boardItem.getTitle(),
-        boardItem.getBody(),
-        boardItem.getCreated().getId(),
-        boardItem.getModified().getId()
-    );
-  }
+    @Cacheable(value = "findBoardItemUseCase", key = "#boardItemId")
+    public BoardDto.FindItemResponse execute(String boardItemId) {
+        BoardItem boardItem = boardItemQueryService.findById(boardItemId);
+        return BoardDto.FindItemResponse.of(
+            boardItem.getId(),
+            boardItem.getTitle(),
+            boardItem.getBody(),
+            boardItem.getCreated().getId(),
+            boardItem.getModified().getId()
+        );
+    }
 }

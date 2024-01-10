@@ -1,8 +1,8 @@
 package leesangho.adtechstudy.mvc.board;
 
+import java.util.NoSuchElementException;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.NoSuchElementException;
 import leesangho.adtechstudy.domain.board.BoardItem;
 
 @Named
@@ -17,7 +17,7 @@ public class BoardItemQueryService {
 
     public BoardItem findById(String boardItemId) {
         return boardItemRepository.findById(boardItemId)
-                .orElseThrow(() -> new NoSuchElementException("게시글을 찾지 못하였습니다."));
+            .orElseThrow(() -> new NoSuchElementException("게시글을 찾지 못하였습니다."));
     }
 
     public <T extends Iterable<BoardItem>> T findAllByOffsetAndLimit(long offset, int limit) {

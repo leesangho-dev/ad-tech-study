@@ -16,26 +16,27 @@ public class UpdateBoardItemUseCase {
     private final BoardItemReactiveCommandService boardItemReactiveCommandService;
 
     public UpdateBoardItemUseCase(BoardItemReactiveQueryService boardItemReactiveQueryService,
-                                  BoardItemReactiveCommandService boardItemReactiveCommandService) {
+        BoardItemReactiveCommandService boardItemReactiveCommandService) {
         this.boardItemReactiveQueryService = boardItemReactiveQueryService;
         this.boardItemReactiveCommandService = boardItemReactiveCommandService;
     }
 
     public Mono<ItemIdResponse> execute(String boardItemId, UpdateItemRequest updateItemRequest) {
-      return boardItemReactiveQueryService.findById(boardItemId) // Mono<Board>
-          .map(boardItem -> mappedUpdateBoardItem(boardItem, updateItemRequest)) // Mono<Mono<Board>
-          .flatMap(boardItemReactiveCommandService::updateItem) // Mono<Board>
-                .map(ItemIdResponse::of);
+        return boardItemReactiveQueryService.findById(boardItemId) // Mono<Board>
+            .map(boardItem -> mappedUpdateBoardItem(boardItem,
+                updateItemRequest)) // Mono<Mono<Board>
+            .flatMap(boardItemReactiveCommandService::updateItem) // Mono<Board>
+            .map(ItemIdResponse::of);
     }
 
-  private BoardItem mappedUpdateBoardItem(BoardItem boardItem,
-      UpdateItemRequest updateItemRequest) {
-    return BoardItem.builder()
-                .id(boardItem.getId())
-                .title(updateItemRequest.getTitle())
-                .body(updateItemRequest.getBody())
-                .created(boardItem.getCreated().getId())
-                .modified(updateItemRequest.getWriter())
-        .build();
+    private BoardItem mappedUpdateBoardItem(BoardItem boardItem,
+        UpdateItemRequest updateItemRequest) {
+        return BoardItem.builder()
+            .id(boardItem.getId())
+            .title(updateItemRequest.getTitle())
+            .body(updateItemRequest.getBody())
+            .created(boardItem.getCreated().getId())
+            .modified(updateItemRequest.getWriter())
+            .build();
     }
 }

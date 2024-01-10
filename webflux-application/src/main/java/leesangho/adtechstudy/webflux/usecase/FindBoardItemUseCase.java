@@ -22,7 +22,7 @@ public class FindBoardItemUseCase {
     @ReactiveCacheable(value = "findBoardItemUseCase", key = "#boardItemId")
     public Mono<FindItemResponse> execute(String boardItemId) {
         log.info("findBoardItemUseCase.execute: {}", Thread.currentThread().getName());
-        Mono<BoardItem> boardItemMono =  boardItemReactiveQueryService.findById(boardItemId);
+        Mono<BoardItem> boardItemMono = boardItemReactiveQueryService.findById(boardItemId);
         return boardItemMono.map(boardItem -> {
             log.info("findBoardItemUseCase.execute.mono: {}", Thread.currentThread().getName());
             return BoardDto.FindItemResponse.of(

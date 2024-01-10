@@ -1,11 +1,10 @@
 package leesangho.adtechstudy.webflux.board;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import leesangho.adtechstudy.domain.board.BoardItem;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import javax.inject.Inject;
-import javax.inject.Named;
 
 @Named
 public class BoardItemReactiveQueryService {

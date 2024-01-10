@@ -7,8 +7,8 @@ import reactor.core.publisher.Hooks;
 @SpringBootApplication
 public class ObservationWebfluxApplication {
 
-  public static void main(String[] args) {
-    SpringApplication.run(ObservationWebfluxApplication.class, args);
-    Hooks.enableAutomaticContextPropagation();
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(ObservationWebfluxApplication.class, args);
+        Hooks.enableAutomaticContextPropagation();
+    }
 }

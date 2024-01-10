@@ -13,12 +13,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString
 public class ObservationDocument {
 
-  @Id
-  private ObjectId id;
+    @Id
+    private ObjectId id;
 
-  private String name;
+    private String name;
 
-  public ObservationDocument(String name) {
-    this.name = name;
-  }
+    public ObservationDocument(String name) {
+        this.name = name;
+    }
 }

@@ -8,18 +8,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class DeleteBoardItemUseCase {
 
-  private final BoardItemQueryService boardItemQueryService;
+    private final BoardItemQueryService boardItemQueryService;
 
-  private final BoardItemCommandService boardItemCommandService;
+    private final BoardItemCommandService boardItemCommandService;
 
-  public DeleteBoardItemUseCase(BoardItemQueryService boardItemQueryService,
-      BoardItemCommandService boardItemCommandService) {
-    this.boardItemQueryService = boardItemQueryService;
-    this.boardItemCommandService = boardItemCommandService;
-  }
+    public DeleteBoardItemUseCase(BoardItemQueryService boardItemQueryService,
+        BoardItemCommandService boardItemCommandService) {
+        this.boardItemQueryService = boardItemQueryService;
+        this.boardItemCommandService = boardItemCommandService;
+    }
 
-  public void execute(String boardItemId) {
-    BoardItem boardItem = boardItemQueryService.findById(boardItemId);
-    boardItemCommandService.deleteItem(boardItem);
-  }
+    public void execute(String boardItemId) {
+        BoardItem boardItem = boardItemQueryService.findById(boardItemId);
+        boardItemCommandService.deleteItem(boardItem);
+    }
 }

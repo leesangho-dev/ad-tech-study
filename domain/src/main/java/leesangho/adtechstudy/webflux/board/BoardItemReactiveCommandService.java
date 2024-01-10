@@ -11,7 +11,8 @@ public class BoardItemReactiveCommandService {
     private final BoardItemReactiveRepository boardItemReactiveRepository;
 
     @Inject
-    public BoardItemReactiveCommandService(BoardItemReactiveRepository boardItemReactiveRepository) {
+    public BoardItemReactiveCommandService(
+        BoardItemReactiveRepository boardItemReactiveRepository) {
         this.boardItemReactiveRepository = boardItemReactiveRepository;
     }
 

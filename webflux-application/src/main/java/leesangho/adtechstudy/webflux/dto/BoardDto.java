@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 
 public class BoardDto {
 
-  private BoardDto() {
-  }
+    private BoardDto() {
+    }
 
     @Data
     @NoArgsConstructor
@@ -41,6 +41,7 @@ public class BoardDto {
     @NoArgsConstructor
     @AllArgsConstructor(staticName = "of")
     public static class FindItemResponse {
+
         @Schema(description = "게시글 아이디")
         private String id;
 

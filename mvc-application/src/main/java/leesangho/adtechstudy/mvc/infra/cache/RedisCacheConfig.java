@@ -16,19 +16,20 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisCacheConfig {
 
-  @Bean
-  public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
-    RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-        .prefixCacheNameWith("mvc::")
-        .serializeKeysWith(
-            RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-        .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
-            new GenericJackson2JsonRedisSerializer()))
-        .entryTtl(Duration.ofMinutes(5));
+    @Bean
+    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
+        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
+            .prefixCacheNameWith("mvc::")
+            .serializeKeysWith(
+                RedisSerializationContext.SerializationPair.fromSerializer(
+                    new StringRedisSerializer()))
+            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
+                new GenericJackson2JsonRedisSerializer()))
+            .entryTtl(Duration.ofMinutes(5));
 
-    return RedisCacheManager.RedisCacheManagerBuilder
-        .fromConnectionFactory(redisConnectionFactory)
-        .cacheDefaults(redisCacheConfiguration)
-        .build();
-  }
+        return RedisCacheManager.RedisCacheManagerBuilder
+            .fromConnectionFactory(redisConnectionFactory)
+            .cacheDefaults(redisCacheConfiguration)
+            .build();
+    }
 }

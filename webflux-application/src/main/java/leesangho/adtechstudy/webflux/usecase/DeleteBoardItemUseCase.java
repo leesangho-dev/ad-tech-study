@@ -13,13 +13,13 @@ public class DeleteBoardItemUseCase {
     private final BoardItemReactiveCommandService boardItemReactiveCommandService;
 
     public DeleteBoardItemUseCase(BoardItemReactiveQueryService boardItemReactiveQueryService,
-                                  BoardItemReactiveCommandService boardItemReactiveCommandService) {
+        BoardItemReactiveCommandService boardItemReactiveCommandService) {
         this.boardItemReactiveQueryService = boardItemReactiveQueryService;
         this.boardItemReactiveCommandService = boardItemReactiveCommandService;
     }
 
     public Mono<Void> execute(String boardItemId) {
         return boardItemReactiveQueryService.findById(boardItemId)
-                .flatMap(boardItemReactiveCommandService::delete);
+            .flatMap(boardItemReactiveCommandService::delete);
     }
 }

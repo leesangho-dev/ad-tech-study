@@ -17,7 +17,7 @@ public class DefaultControllerAdvice {
     }
 
     @ExceptionHandler({IllegalArgumentException.class,
-            IllegalStateException.class})
+        IllegalStateException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public BaseResponse<Void> clientError(Exception exception) {
         return BaseResponse.clientErrorOf(exception.getMessage());

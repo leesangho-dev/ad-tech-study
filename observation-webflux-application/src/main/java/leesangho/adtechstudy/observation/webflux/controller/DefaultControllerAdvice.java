@@ -11,23 +11,23 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class DefaultControllerAdvice {
 
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
-  public Mono<String> clientError(Exception exception) {
-    return Mono.defer(() -> {
-          log.error("client error! {}", exception.getMessage());
-          return Mono.just(exception.getMessage());
-        })
-        .doOnNext(s -> log.info("client error doOnNext {}", s));
-  }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
+    public Mono<String> clientError(Exception exception) {
+        return Mono.defer(() -> {
+                log.error("client error! {}", exception.getMessage());
+                return Mono.just(exception.getMessage());
+            })
+            .doOnNext(s -> log.info("client error doOnNext {}", s));
+    }
 
-  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  @ExceptionHandler
-  public Mono<String> serverError(Exception exception) {
-    return Mono.defer(() -> {
-          log.error("server error! {}", exception.getMessage());
-          return Mono.just(exception.getMessage());
-        })
-        .doOnNext(s -> log.info("server error doOnNext {}", s));
-  }
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler
+    public Mono<String> serverError(Exception exception) {
+        return Mono.defer(() -> {
+                log.error("server error! {}", exception.getMessage());
+                return Mono.just(exception.getMessage());
+            })
+            .doOnNext(s -> log.info("server error doOnNext {}", s));
+    }
 }

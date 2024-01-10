@@ -17,8 +17,9 @@ public class SaveBoardItemUseCase {
     }
 
     public Mono<ItemIdResponse> execute(SaveItemRequest saveItemRequest) {
-        BoardItem boardItem = BoardItem.writeOf(saveItemRequest.getTitle(), saveItemRequest.getBody(),
-                saveItemRequest.getWriter());
+        BoardItem boardItem = BoardItem.writeOf(saveItemRequest.getTitle(),
+            saveItemRequest.getBody(),
+            saveItemRequest.getWriter());
         Mono<String> boadItemIdMono = boardItemReactiveCommandService.saveItem(boardItem);
         return boadItemIdMono.map(ItemIdResponse::of);
     }

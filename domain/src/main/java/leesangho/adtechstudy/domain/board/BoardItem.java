@@ -1,11 +1,10 @@
 package leesangho.adtechstudy.domain.board;
 
+import java.util.Objects;
 import leesangho.adtechstudy.domain.id.GUIDGenerator;
 import leesangho.adtechstudy.domain.member.MemberId;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.util.Objects;
 
 @Getter
 public class BoardItem {
@@ -64,10 +63,16 @@ public class BoardItem {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         BoardItem boardItem = (BoardItem) o;
-        return Objects.equals(id, boardItem.id) && Objects.equals(title, boardItem.title) && Objects.equals(body, boardItem.body) && Objects.equals(created, boardItem.created) && Objects.equals(modified, boardItem.modified);
+        return Objects.equals(id, boardItem.id) && Objects.equals(title, boardItem.title)
+            && Objects.equals(body, boardItem.body) && Objects.equals(created, boardItem.created)
+            && Objects.equals(modified, boardItem.modified);
     }
 
     @Override
@@ -78,11 +83,11 @@ public class BoardItem {
     @Override
     public String toString() {
         return "BoardItem{" +
-                "id='" + id + '\'' +
-                ", title='" + title + '\'' +
-                ", body='" + body + '\'' +
-                ", created=" + created +
-                ", modified=" + modified +
-                '}';
+            "id='" + id + '\'' +
+            ", title='" + title + '\'' +
+            ", body='" + body + '\'' +
+            ", created=" + created +
+            ", modified=" + modified +
+            '}';
     }
 }

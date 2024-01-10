@@ -1,5 +1,8 @@
 package leesangho.adtechstudy.webflux.infra.redis;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.time.Duration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -10,10 +13,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.time.Duration;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 class ReactiveRedisTest {
 
     ReactiveStringRedisTemplate reactiveStringRedisTemplate;
@@ -22,7 +21,8 @@ class ReactiveRedisTest {
 
     @BeforeEach
     void setUp() {
-        LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory("localhost", 6379);
+        LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(
+            "localhost", 6379);
         lettuceConnectionFactory.afterPropertiesSet();
         reactiveStringRedisTemplate = new ReactiveStringRedisTemplate(lettuceConnectionFactory);
         stringRedisTemplate = new StringRedisTemplate(lettuceConnectionFactory);
@@ -40,31 +40,31 @@ class ReactiveRedisTest {
 
             // When
             Mono<Boolean> publisher = reactiveStringRedisTemplate.opsForValue()
-                    .set(key, value);
+                .set(key, value);
             // Then
             StepVerifier.create(publisher)
-                    .expectNext(true)
-                    .expectComplete()
-                    .log()
-                    .verify()
+                .expectNext(true)
+                .expectComplete()
+                .log()
+                .verify()
             ;
 
             // When & Then
             StepVerifier.create(reactiveStringRedisTemplate.opsForValue()
-                            .get(key))
-                    .expectNext(value)
-                    .expectComplete()
-                    .log()
-                    .verify()
+                    .get(key))
+                .expectNext(value)
+                .expectComplete()
+                .log()
+                .verify()
             ;
 
             // When & Then
             StepVerifier.create(reactiveStringRedisTemplate.opsForValue()
-                            .delete(key))
-                    .expectNext(true)
-                    .expectComplete()
-                    .log()
-                    .verify()
+                    .delete(key))
+                .expectNext(true)
+                .expectComplete()
+                .log()
+                .verify()
             ;
         }
 
@@ -78,13 +78,13 @@ class ReactiveRedisTest {
             // When & Then
             assertThatThrownBy(() -> {
                 Mono.delay(Duration.ofMillis(1))
-                        .doOnNext(it -> {
-                            stringRedisTemplate.opsForValue()
-                                    .set(key, value);
-                        })
-                        .block();
+                    .doOnNext(it -> {
+                        stringRedisTemplate.opsForValue()
+                            .set(key, value);
+                    })
+                    .block();
             })
-                    .hasMessageContaining("Blocking call")
+                .hasMessageContaining("Blocking call")
             ;
         }
 
@@ -98,11 +98,11 @@ class ReactiveRedisTest {
             // When & Then
             assertThatThrownBy(() -> {
                 Mono.delay(Duration.ofMillis(1))
-                        .flatMap(l -> reactiveStringRedisTemplate.opsForValue()
-                                .set(key, value))
-                        .block();
+                    .flatMap(l -> reactiveStringRedisTemplate.opsForValue()
+                        .set(key, value))
+                    .block();
             })
-                    .hasMessageContaining("Blocking call")
+                .hasMessageContaining("Blocking call")
             ;
         }
 

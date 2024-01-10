@@ -47,9 +47,10 @@ class BoardControllerTest {
 
     @BeforeEach
     void setUp() {
-        webTestClient = WebTestClient.bindToController(new BoardController(saveBoardItemUseCase, findBoardItemUseCase,
-                        deleteBoardItemUseCase, updateBoardItemUseCase, findAllPageBoardItemsUseCase))
-                .build();
+        webTestClient = WebTestClient.bindToController(
+                new BoardController(saveBoardItemUseCase, findBoardItemUseCase,
+                    deleteBoardItemUseCase, updateBoardItemUseCase, findAllPageBoardItemsUseCase))
+            .build();
     }
 
     @DisplayName("게시글 등록 테스트")
@@ -61,21 +62,22 @@ class BoardControllerTest {
         void saveBoardItem_happy_case() {
             // Given
             BoardItem boardItem = BoardItemFixture.fixtureBoardItem();
-            SaveItemSampleRequest saveItemSampleRequest = new SaveItemSampleRequest(boardItem.getTitle(), boardItem.getBody(), boardItem.getCreated().getId());
+            SaveItemSampleRequest saveItemSampleRequest = new SaveItemSampleRequest(
+                boardItem.getTitle(), boardItem.getBody(), boardItem.getCreated().getId());
             given(saveBoardItemUseCase.execute(any()))
-                    .willReturn(Mono.just(BoardDto.ItemIdResponse.of(boardItem.getId())));
+                .willReturn(Mono.just(BoardDto.ItemIdResponse.of(boardItem.getId())));
 
             // When & Then
             webTestClient.post()
-                    .uri("/v1/board/item")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .acceptCharset(StandardCharsets.UTF_8)
-                    .body(Mono.just(saveItemSampleRequest), SaveItemSampleRequest.class)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .exchange()
-                    .expectStatus().isCreated()
-                    .expectBody()
-                    .jsonPath("$.code").isEqualTo(HttpStatus.CREATED.value())
+                .uri("/v1/board/item")
+                .contentType(MediaType.APPLICATION_JSON)
+                .acceptCharset(StandardCharsets.UTF_8)
+                .body(Mono.just(saveItemSampleRequest), SaveItemSampleRequest.class)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody()
+                .jsonPath("$.code").isEqualTo(HttpStatus.CREATED.value())
             ;
         }
 
@@ -112,7 +114,7 @@ class BoardControllerTest {
     @Nested
     class FindBoardItem {
 
-      WebClient webClient = WebClient.builder()
-          .build();
+        WebClient webClient = WebClient.builder()
+            .build();
     }
 }

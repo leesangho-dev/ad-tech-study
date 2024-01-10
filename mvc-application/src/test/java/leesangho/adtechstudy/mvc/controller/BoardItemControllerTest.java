@@ -73,13 +73,15 @@ class BoardItemControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new BoardController(saveBoardItemUseCase, findBoardItemUseCase, deleteBoardItemUseCase, updateBoardItemUseCase, findAllPageBoardItemUseCase))
-                .setControllerAdvice(new DefaultControllerAdvice())
-                .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
-                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
-                .build();
+        mockMvc = MockMvcBuilders.standaloneSetup(
+                new BoardController(saveBoardItemUseCase, findBoardItemUseCase, deleteBoardItemUseCase,
+                    updateBoardItemUseCase, findAllPageBoardItemUseCase))
+            .setControllerAdvice(new DefaultControllerAdvice())
+            .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
+            .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+            .build();
         objectMapper = Jackson2ObjectMapperBuilder.json()
-                .build();
+            .build();
     }
 
     @DisplayName("게시글 저장 요청/응답 테스트")
@@ -93,24 +95,25 @@ class BoardItemControllerTest {
         @Test
         void saveBoardItem_happy_case() throws Exception {
             // Given
-            SaveBoardSampleRequest saveBoardSampleRequest = new SaveBoardSampleRequest("제목", "본문", "작성자");
+            SaveBoardSampleRequest saveBoardSampleRequest = new SaveBoardSampleRequest("제목", "본문",
+                "작성자");
             String body = objectMapper.writeValueAsString(saveBoardSampleRequest);
             given(saveBoardItemUseCase.execute(any()))
-                    .willReturn(BoardDto.ItemIdResponse.of(boardItemId));
+                .willReturn(BoardDto.ItemIdResponse.of(boardItemId));
 
             // When & Then
             mockMvc.perform(post("/v1/board/item")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .content(body)
-                    )
-                    .andDo(print())
-                    .andExpect(status().isCreated())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$.code").value(HttpStatus.CREATED.value()))
-                    .andExpect(jsonPath("$.message").value("게시글 생성이 완료 되었습니다."))
-                    .andExpect(jsonPath("$.data").isNotEmpty())
-                    .andExpect(jsonPath("$.data.id").value(boardItemId))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding(StandardCharsets.UTF_8)
+                    .content(body)
+                )
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.code").value(HttpStatus.CREATED.value()))
+                .andExpect(jsonPath("$.message").value("게시글 생성이 완료 되었습니다."))
+                .andExpect(jsonPath("$.data").isNotEmpty())
+                .andExpect(jsonPath("$.data.id").value(boardItemId))
             ;
         }
 
@@ -144,30 +147,32 @@ class BoardItemControllerTest {
         @DisplayName("실패 케이스 - 필수 값을 누락하고 요청을 할 경우")
         @ParameterizedTest
         @MethodSource("bad_case_wrong_request")
-        void saveBoardItem_bad_case_wrong_request(String body, String errorMessage) throws Exception {
+        void saveBoardItem_bad_case_wrong_request(String body, String errorMessage)
+            throws Exception {
             // Given
             given(saveBoardItemUseCase.execute(any()))
-                    .willThrow(new IllegalArgumentException(errorMessage));
+                .willThrow(new IllegalArgumentException(errorMessage));
 
             // When & Then
             mockMvc.perform(post("/v1/board/item")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .content(body)
-                    )
-                    .andDo(print())
-                    .andExpect(status().isBadRequest())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
-                    .andExpect(jsonPath("$.message").value(errorMessage))
-                    .andExpect(jsonPath("$.data").isEmpty())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding(StandardCharsets.UTF_8)
+                    .content(body)
+                )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
+                .andExpect(jsonPath("$.message").value(errorMessage))
+                .andExpect(jsonPath("$.data").isEmpty())
             ;
         }
 
         Stream<Arguments> bad_case_wrong_request() {
             return Stream.of(
                 Arguments.of("{\"item\":\"제목\",\"image\":\"본문\",\"writer\":\"작성자\"}", "제목이 없습니다."),
-                Arguments.of("{\"title\":\"제목\",\"image\":\"본문\",\"writer\":\"\"}", "사용자 아이디가 잘못 되었습니다.")
+                Arguments.of("{\"title\":\"제목\",\"image\":\"본문\",\"writer\":\"\"}",
+                    "사용자 아이디가 잘못 되었습니다.")
             );
         }
     }
@@ -183,17 +188,19 @@ class BoardItemControllerTest {
             BoardItem boardItem = BoardItemFixture.fixtureBoardItem();
             String boardItemId = boardItem.getId();
             given(findBoardItemUseCase.execute(boardItemId))
-                    .willReturn(BoardDto.FindItemResponse.of(boardItemId, boardItem.getTitle(), boardItem.getBody(), boardItem.getCreated().getId(), boardItem.getModified().getId()));
+                .willReturn(BoardDto.FindItemResponse.of(boardItemId, boardItem.getTitle(),
+                    boardItem.getBody(), boardItem.getCreated().getId(),
+                    boardItem.getModified().getId()));
 
             // When & Then
             mockMvc.perform(get("/v1/board/item/{id}", boardItemId)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .characterEncoding(StandardCharsets.UTF_8)
-                    )
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.code").value(HttpStatus.OK.value()))
-                    .andExpect(jsonPath("$.data").isNotEmpty())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding(StandardCharsets.UTF_8)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(HttpStatus.OK.value()))
+                .andExpect(jsonPath("$.data").isNotEmpty())
             ;
         }
 
@@ -203,16 +210,16 @@ class BoardItemControllerTest {
             // Given
             String boardItemId = GUIDGenerator.newId();
             given(findBoardItemUseCase.execute(boardItemId))
-                    .willThrow(new NoSuchElementException("게시글을 찾을 수 없습니다."));
+                .willThrow(new NoSuchElementException("게시글을 찾을 수 없습니다."));
 
             // When & then
             mockMvc.perform(get("/v1/board/item/{id}", boardItemId)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .characterEncoding(StandardCharsets.UTF_8)
-                    )
-                    .andDo(print())
-                    .andExpect(status().isNotFound())
-                    .andExpect(jsonPath("$.code").value(HttpStatus.NOT_FOUND.value()))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding(StandardCharsets.UTF_8)
+                )
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value(HttpStatus.NOT_FOUND.value()))
             ;
         }
     }
@@ -228,17 +235,17 @@ class BoardItemControllerTest {
         void deleteBoardItem_happy_case() throws Exception {
             // Given
             doNothing()
-                    .when(deleteBoardItemUseCase)
-                            .execute(boardItemId);
+                .when(deleteBoardItemUseCase)
+                .execute(boardItemId);
 
             // When & then
             mockMvc.perform(delete("/v1/board/item/{id}", boardItemId)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .characterEncoding(StandardCharsets.UTF_8)
-                    )
-                    .andDo(print())
-                    .andExpect(status().isNoContent())
-                    .andExpect(jsonPath("$.code").value(HttpStatus.NO_CONTENT.value()))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding(StandardCharsets.UTF_8)
+                )
+                .andDo(print())
+                .andExpect(status().isNoContent())
+                .andExpect(jsonPath("$.code").value(HttpStatus.NO_CONTENT.value()))
             ;
         }
 
@@ -247,17 +254,17 @@ class BoardItemControllerTest {
         void deleteBoardItem_bad_case_not_found() throws Exception {
             // Given
             doThrow(new NoSuchElementException("게시글을 찾지 못하였습니다."))
-                    .when(deleteBoardItemUseCase)
-                            .execute(boardItemId);
+                .when(deleteBoardItemUseCase)
+                .execute(boardItemId);
 
             // When & then
             mockMvc.perform(delete("/v1/board/item/{id}", boardItemId)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .characterEncoding(StandardCharsets.UTF_8)
-                    )
-                    .andDo(print())
-                    .andExpect(status().isNotFound())
-                    .andExpect(jsonPath("$.code").value(HttpStatus.NOT_FOUND.value()))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding(StandardCharsets.UTF_8)
+                )
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value(HttpStatus.NOT_FOUND.value()))
             ;
         }
     }
@@ -272,20 +279,21 @@ class BoardItemControllerTest {
         @Test
         void updateBoardItem_happy_case() throws Exception {
             // Given
-            UpdateBoardSampleRequest updateBoardSampleRequest = new UpdateBoardSampleRequest("제목", "본문", "작성자");
+            UpdateBoardSampleRequest updateBoardSampleRequest = new UpdateBoardSampleRequest("제목",
+                "본문", "작성자");
             String body = objectMapper.writeValueAsString(updateBoardSampleRequest);
             given(updateBoardItemUseCase.execute(any(), any()))
-                    .willReturn(BoardDto.ItemIdResponse.of(boardItemId));
+                .willReturn(BoardDto.ItemIdResponse.of(boardItemId));
 
             // When & Then
             mockMvc.perform(put("/v1/board/item/{id}", boardItemId)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .content(body)
-                    )
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.code").value(HttpStatus.OK.value()))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding(StandardCharsets.UTF_8)
+                    .content(body)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(HttpStatus.OK.value()))
             ;
         }
 
@@ -320,20 +328,21 @@ class BoardItemControllerTest {
         @Test
         void updateBoardItem_bad_case_not_found() throws Exception {
             // Given
-            UpdateBoardSampleRequest updateBoardSampleRequest = new UpdateBoardSampleRequest("제목", "본문", "작성자");
+            UpdateBoardSampleRequest updateBoardSampleRequest = new UpdateBoardSampleRequest("제목",
+                "본문", "작성자");
             String body = objectMapper.writeValueAsString(updateBoardSampleRequest);
             given(updateBoardItemUseCase.execute(any(), any()))
-                    .willThrow(new NoSuchElementException("게시글을 찾지 못하였습니다."));
+                .willThrow(new NoSuchElementException("게시글을 찾지 못하였습니다."));
 
             // When & Then
             mockMvc.perform(put("/v1/board/item/{id}", boardItemId)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .content(body)
-                    )
-                    .andDo(print())
-                    .andExpect(status().isNotFound())
-                    .andExpect(jsonPath("$.code").value(HttpStatus.NOT_FOUND.value()))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding(StandardCharsets.UTF_8)
+                    .content(body)
+                )
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value(HttpStatus.NOT_FOUND.value()))
             ;
         }
 
@@ -341,20 +350,21 @@ class BoardItemControllerTest {
         @Test
         void updateBoardItem_bad_case_bad_request() throws Exception {
             // Given
-            UpdateBoardSampleRequest updateBoardSampleRequest = new UpdateBoardSampleRequest("", "본문", "작성자");
+            UpdateBoardSampleRequest updateBoardSampleRequest = new UpdateBoardSampleRequest("",
+                "본문", "작성자");
             String body = objectMapper.writeValueAsString(updateBoardSampleRequest);
             given(updateBoardItemUseCase.execute(any(), any()))
-                    .willThrow(new IllegalArgumentException("제목이 없습니다."));
+                .willThrow(new IllegalArgumentException("제목이 없습니다."));
 
             // When & Then
             mockMvc.perform(put("/v1/board/item/{id}", boardItemId)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .characterEncoding(StandardCharsets.UTF_8)
-                            .content(body)
-                    )
-                    .andDo(print())
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding(StandardCharsets.UTF_8)
+                    .content(body)
+                )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(HttpStatus.BAD_REQUEST.value()))
             ;
         }
     }
@@ -367,31 +377,32 @@ class BoardItemControllerTest {
         @Test
         void findAllPageBoardItems_happy_case() throws Exception {
             // Given
-            List<BoardDto.FindItemResponse> itemResponseList = BoardItemFixture.fixtureBoardItems(10)
-                    .stream()
-                    .map(this::mappedBoardItemResponse)
-                    .collect(Collectors.toList());
+            List<BoardDto.FindItemResponse> itemResponseList = BoardItemFixture.fixtureBoardItems(
+                    10)
+                .stream()
+                .map(this::mappedBoardItemResponse)
+                .collect(Collectors.toList());
 
             given(findAllPageBoardItemUseCase.execute(PageRequest.of(0, 10)))
-                    .willReturn(new PageImpl<>(itemResponseList, PageRequest.of(0, 10), 30));
+                .willReturn(new PageImpl<>(itemResponseList, PageRequest.of(0, 10), 30));
 
             // When & Then
             mockMvc.perform(get("/v1/board/item")
-                            .param("page", "0")
-                            .param("size", "10")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .characterEncoding(StandardCharsets.UTF_8)
-                    )
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.code").value(HttpStatus.OK.value()))
+                    .param("page", "0")
+                    .param("size", "10")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding(StandardCharsets.UTF_8)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(HttpStatus.OK.value()))
             ;
         }
 
         private BoardDto.FindItemResponse mappedBoardItemResponse(BoardItem boardItem) {
             return BoardDto.FindItemResponse.of(
-                    boardItem.getId(), boardItem.getTitle(), boardItem.getBody(),
-                    boardItem.getCreated().getId(), boardItem.getModified().getId()
+                boardItem.getId(), boardItem.getTitle(), boardItem.getBody(),
+                boardItem.getCreated().getId(), boardItem.getModified().getId()
             );
         }
     }

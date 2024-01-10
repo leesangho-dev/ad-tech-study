@@ -16,22 +16,22 @@ import org.zalando.logbook.spring.webflux.LogbookWebFilter;
 @EnableAutoConfiguration(exclude = LogbookWebFluxAutoConfiguration.class)
 public class ObservationConfig {
 
-  @Bean
-  @ConditionalOnMissingBean(
-      name = {"logbookClientExchangeFunction"}
-  )
-  public ExchangeFilterFunction logbookClientExchangeFunction(final Logbook logbook) {
-    return new LogbookExchangeFilterFunction(logbook);
-  }
+    @Bean
+    @ConditionalOnMissingBean(
+        name = {"logbookClientExchangeFunction"}
+    )
+    public ExchangeFilterFunction logbookClientExchangeFunction(final Logbook logbook) {
+        return new LogbookExchangeFilterFunction(logbook);
+    }
 
-  @Bean
-  @ConditionalOnProperty(
-      name = {"logbook.filter.enabled"},
-      havingValue = "true",
-      matchIfMissing = true
-  )
-  public WebFilter logbookServerFilter(final Logbook logbook) {
-    return new LogbookWebFilter(logbook);
-  }
+    @Bean
+    @ConditionalOnProperty(
+        name = {"logbook.filter.enabled"},
+        havingValue = "true",
+        matchIfMissing = true
+    )
+    public WebFilter logbookServerFilter(final Logbook logbook) {
+        return new LogbookWebFilter(logbook);
+    }
 
 }

@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class ObservationMvcApplication {
 
-  public static void main(String[] args) {
-    SpringApplication.run(ObservationMvcApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(ObservationMvcApplication.class, args);
+    }
 }

@@ -56,22 +56,22 @@ class BlockingTest {
 
         // When
         Mono.fromSupplier(() -> {
-                    log.info("publisher task");
-                    return 1;
-                })
-                .publishOn(Schedulers.boundedElastic())
-                .doOnNext(it -> blockingLogicTask())
-                .block();
+                log.info("publisher task");
+                return 1;
+            })
+            .publishOn(Schedulers.boundedElastic())
+            .doOnNext(it -> blockingLogicTask())
+            .block();
 
         // Then
     }
 
-  @Test
-  void name() throws InterruptedException {
-    Hooks.onOperatorDebug();
+    @Test
+    void name() throws InterruptedException {
+        Hooks.onOperatorDebug();
 
-    ExecutorService executorService = Executors.newFixedThreadPool(30);
-    ExecutorService executorService2 = Executors.newFixedThreadPool(3);
+        ExecutorService executorService = Executors.newFixedThreadPool(30);
+        ExecutorService executorService2 = Executors.newFixedThreadPool(3);
 //
 //        Flux.range(0, 30)
 //            .parallel()
@@ -96,31 +96,31 @@ class BlockingTest {
 //
 //        Thread.sleep(10000);
 
-    Flux.range(0, 30)
-        .log("take")
-        .flatMap(id -> {
-          return Flux.range(0, 1)
-              .publishOn(Schedulers.fromExecutor(executorService))
-              .map(value -> {
-                try {
-                  Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                  throw new RuntimeException(e);
-                }
-                return value;
-              })
-              .log("blocking")
-              ;
-        })
-        .log("flatmap")
-        .map(integer -> {
-          log.info("map");
-          return integer;
-        })
-        .subscribeOn(Schedulers.parallel())
-        .subscribe();
+        Flux.range(0, 30)
+            .log("take")
+            .flatMap(id -> {
+                return Flux.range(0, 1)
+                    .publishOn(Schedulers.fromExecutor(executorService))
+                    .map(value -> {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                        return value;
+                    })
+                    .log("blocking")
+                    ;
+            })
+            .log("flatmap")
+            .map(integer -> {
+                log.info("map");
+                return integer;
+            })
+            .subscribeOn(Schedulers.parallel())
+            .subscribe();
 
-    Thread.sleep(10000);
+        Thread.sleep(10000);
 
 //        Flux.range(0, 10)
 //                .log("take")
@@ -146,5 +146,5 @@ class BlockingTest {
 //                .blockLast();
 
 //        Thread.sleep(10000);
-  }
+    }
 }

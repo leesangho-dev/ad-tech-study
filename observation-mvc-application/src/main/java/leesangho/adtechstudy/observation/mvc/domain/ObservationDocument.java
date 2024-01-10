@@ -15,13 +15,13 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @ToString
 public class ObservationDocument {
 
-  @Id
-  private ObjectId id;
+    @Id
+    private ObjectId id;
 
-  @Field
-  private String name;
+    @Field
+    private String name;
 
-  public ObservationDocument(String name) {
-    this.name = name;
-  }
+    public ObservationDocument(String name) {
+        this.name = name;
+    }
 }

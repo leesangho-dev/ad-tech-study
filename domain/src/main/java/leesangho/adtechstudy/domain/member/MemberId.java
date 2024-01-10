@@ -31,8 +31,12 @@ public class MemberId {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         MemberId memberId = (MemberId) o;
         return Objects.equals(id, memberId.id);
     }
@@ -45,7 +49,7 @@ public class MemberId {
     @Override
     public String toString() {
         return "MemberId{" +
-                "id='" + id + '\'' +
-                '}';
+            "id='" + id + '\'' +
+            '}';
     }
 }

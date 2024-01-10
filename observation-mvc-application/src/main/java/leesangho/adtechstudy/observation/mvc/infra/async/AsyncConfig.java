@@ -15,32 +15,33 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @Configuration
 public class AsyncConfig implements AsyncConfigurer {
 
-  private final ExecutorService asyncExecutorService;
+    private final ExecutorService asyncExecutorService;
 
-  public AsyncConfig(ThreadPoolTaskExecutor asyncExecutor) {
-    this.asyncExecutorService = asyncExecutor.getThreadPoolExecutor();
-  }
-
-  @Override
-  public Executor getAsyncExecutor() {
-    return asyncExecutorService;
-  }
-
-  @Configuration
-  public static class AsyncExecutorConfig {
-
-    @Bean
-    public TaskDecorator contextPropagationTaskDecorator() {
-      ContextSnapshotFactory contextSnapshotFactory = ContextSnapshotFactory.builder().build();
-      return runnable -> contextSnapshotFactory.captureAll(new Object[0]).wrap(runnable);
+    public AsyncConfig(ThreadPoolTaskExecutor asyncExecutor) {
+        this.asyncExecutorService = asyncExecutor.getThreadPoolExecutor();
     }
 
-    @Bean
-    public ThreadPoolTaskExecutor asyncExecutor(TaskDecorator contextPropagationTaskDecorator) {
-      return new TaskExecutorBuilder()
-          .threadNamePrefix("async-exec-")
-          .taskDecorator(contextPropagationTaskDecorator)
-          .build();
+    @Override
+    public Executor getAsyncExecutor() {
+        return asyncExecutorService;
     }
-  }
+
+    @Configuration
+    public static class AsyncExecutorConfig {
+
+        @Bean
+        public TaskDecorator contextPropagationTaskDecorator() {
+            ContextSnapshotFactory contextSnapshotFactory = ContextSnapshotFactory.builder()
+                .build();
+            return runnable -> contextSnapshotFactory.captureAll(new Object[0]).wrap(runnable);
+        }
+
+        @Bean
+        public ThreadPoolTaskExecutor asyncExecutor(TaskDecorator contextPropagationTaskDecorator) {
+            return new TaskExecutorBuilder()
+                .threadNamePrefix("async-exec-")
+                .taskDecorator(contextPropagationTaskDecorator)
+                .build();
+        }
+    }
 }

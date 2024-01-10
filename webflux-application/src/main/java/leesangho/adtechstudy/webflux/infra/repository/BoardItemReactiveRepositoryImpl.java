@@ -14,7 +14,8 @@ public class BoardItemReactiveRepositoryImpl implements BoardItemReactiveReposit
 
     private final BoardItemReactiveMongoRepository boardItemReactiveMongoRepository;
 
-    public BoardItemReactiveRepositoryImpl(BoardItemReactiveMongoRepository boardItemReactiveMongoRepository) {
+    public BoardItemReactiveRepositoryImpl(
+        BoardItemReactiveMongoRepository boardItemReactiveMongoRepository) {
         this.boardItemReactiveMongoRepository = boardItemReactiveMongoRepository;
     }
 
@@ -22,34 +23,34 @@ public class BoardItemReactiveRepositoryImpl implements BoardItemReactiveReposit
     public Mono<String> saveItem(BoardItem boardItem) {
         BoardItemDocument boardItemDocument = mappedDocument(boardItem);
         return boardItemReactiveMongoRepository.save(boardItemDocument)
-                .map(BoardItemDocument::getId);
+            .map(BoardItemDocument::getId);
     }
 
     private BoardItemDocument mappedDocument(BoardItem boardItem) {
         return BoardItemDocument.builder()
-                .id(boardItem.getId())
-                .title(boardItem.getTitle())
-                .body(boardItem.getBody())
-                .created(boardItem.getCreated().getId())
-                .modified(boardItem.getModified().getId())
-                .build();
+            .id(boardItem.getId())
+            .title(boardItem.getTitle())
+            .body(boardItem.getBody())
+            .created(boardItem.getCreated().getId())
+            .modified(boardItem.getModified().getId())
+            .build();
     }
 
     @Override
     public Mono<BoardItem> findById(String boardItemId) {
         return boardItemReactiveMongoRepository.findById(boardItemId)
-                .map(this::fromDomain)
-                .switchIfEmpty(Mono.error(new NoSuchElementException("게시글을 찾지 못하였습니다.")));
+            .map(this::fromDomain)
+            .switchIfEmpty(Mono.error(new NoSuchElementException("게시글을 찾지 못하였습니다.")));
     }
 
     private BoardItem fromDomain(BoardItemDocument boardItemDocument) {
         return BoardItem.builder()
-                .id(boardItemDocument.getId())
-                .title(boardItemDocument.getTitle())
-                .body(boardItemDocument.getBody())
-                .created(boardItemDocument.getCreated())
-                .modified(boardItemDocument.getModified())
-                .build();
+            .id(boardItemDocument.getId())
+            .title(boardItemDocument.getTitle())
+            .body(boardItemDocument.getBody())
+            .created(boardItemDocument.getCreated())
+            .modified(boardItemDocument.getModified())
+            .build();
     }
 
     @Override
@@ -59,13 +60,13 @@ public class BoardItemReactiveRepositoryImpl implements BoardItemReactiveReposit
 
     @Override
     public Mono<String> updateItem(BoardItem boardItem) {
-      return saveItem(boardItem);
+        return saveItem(boardItem);
     }
 
     @Override
     public Flux<BoardItem> findAllByOffsetAndLimit(long offset, int pageSize) {
         return boardItemReactiveMongoRepository.findAllBy(PageRequest.of((int) offset, pageSize))
-                .map(this::fromDomain);
+            .map(this::fromDomain);
     }
 
 }

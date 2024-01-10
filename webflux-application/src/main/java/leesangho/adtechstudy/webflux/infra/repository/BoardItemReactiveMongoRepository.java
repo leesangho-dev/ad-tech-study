@@ -5,7 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Flux;
 
-public interface BoardItemReactiveMongoRepository extends ReactiveMongoRepository<BoardItemDocument, String> {
+public interface BoardItemReactiveMongoRepository extends
+    ReactiveMongoRepository<BoardItemDocument, String> {
 
     Flux<BoardItemDocument> findAllBy(Pageable pageable);
 }

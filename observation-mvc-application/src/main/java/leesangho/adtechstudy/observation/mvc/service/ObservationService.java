@@ -12,41 +12,41 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class ObservationService {
 
-  private static final String LOG_FORMAT = "ObservationService {}";
+    private static final String LOG_FORMAT = "ObservationService {}";
 
-  private final ObservationDocumentRepository observationDocumentRepository;
+    private final ObservationDocumentRepository observationDocumentRepository;
 
-  private final RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-  public ObservationService(ObservationDocumentRepository observationDocumentRepository,
-      RestTemplate restTemplate) {
-    this.observationDocumentRepository = observationDocumentRepository;
-    this.restTemplate = restTemplate;
-  }
+    public ObservationService(ObservationDocumentRepository observationDocumentRepository,
+        RestTemplate restTemplate) {
+        this.observationDocumentRepository = observationDocumentRepository;
+        this.restTemplate = restTemplate;
+    }
 
-  public void basic() {
-    log.info(LOG_FORMAT, "basic");
-  }
+    public void basic() {
+        log.info(LOG_FORMAT, "basic");
+    }
 
-  @Async
-  public void async() {
-    log.info(LOG_FORMAT, "async");
-  }
+    @Async
+    public void async() {
+        log.info(LOG_FORMAT, "async");
+    }
 
-  public void saveMongodb(String name) {
-    log.info(LOG_FORMAT, "saveMongodb");
-    observationDocumentRepository.save(new ObservationDocument(name));
-  }
+    public void saveMongodb(String name) {
+        log.info(LOG_FORMAT, "saveMongodb");
+        observationDocumentRepository.save(new ObservationDocument(name));
+    }
 
-  public void findMongodb(ObjectId id) {
-    log.info(LOG_FORMAT, "findMongodb");
-    observationDocumentRepository.findById(id)
-        .ifPresent(observationDocument -> log.info("{}", observationDocument));
-  }
+    public void findMongodb(ObjectId id) {
+        log.info(LOG_FORMAT, "findMongodb");
+        observationDocumentRepository.findById(id)
+            .ifPresent(observationDocument -> log.info("{}", observationDocument));
+    }
 
-  public void restApiCallByTemplate() {
-    log.info(LOG_FORMAT, "restApiCallByTemplate");
-    restTemplate.getForEntity("http://localhost:8080/v3/api-docs/swagger-config", String.class);
-  }
+    public void restApiCallByTemplate() {
+        log.info(LOG_FORMAT, "restApiCallByTemplate");
+        restTemplate.getForEntity("http://localhost:8080/v3/api-docs/swagger-config", String.class);
+    }
 
 }
